@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kit Afiliada — Glow Girl Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --pink:      #FF6B9D;
+  --purple:    #8B5CF6;
+  --bg:        #0f0a1e;
+  --surface:   #1a1030;
+  --surface2:  #221540;
+  --border:    rgba(255,107,157,0.15);
+  --text:      #F0EAF8;
+  --text-mid:  #B09EC8;
+  --text-dim:  #6B5A80;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1a0a2e 0%, #2d1060 50%, #1a0a2e 100%);
+  padding: 52px 20px 44px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; left: 50%; transform: translateX(-50%);
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,107,157,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,107,157,0.12);
+  border: 1px solid rgba(255,107,157,0.3);
+  border-radius: 50px; padding: 6px 16px;
+  font-size: 13px; font-weight: 600; color: var(--pink);
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: clamp(26px, 7vw, 38px); font-weight: 900; line-height: 1.15;
+  background: linear-gradient(135deg, #fff 30%, #FF6B9D 70%, #8B5CF6);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 14px;
+}
+.hero p { font-size: 15px; color: var(--text-mid); max-width: 440px; margin: 0 auto 28px; line-height: 1.6; }
+
+/* STEPS */
+.steps {
+  display: flex; flex-direction: column; gap: 12px;
+  max-width: 500px; margin: 0 auto;
+}
+.step-item {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; padding: 14px 16px; text-align: left;
+}
+.step-num {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800;
+}
+.step-text strong { font-size: 14px; display: block; margin-bottom: 2px; }
+.step-text span { font-size: 12px; color: var(--text-mid); }
+
+/* SECTIONS */
+.section { max-width: 640px; margin: 0 auto; padding: 40px 16px; }
+.section-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--pink); margin-bottom: 6px; }
+.section h2 { font-size: clamp(20px, 5vw, 26px); font-weight: 800; margin-bottom: 20px; line-height: 1.25; }
+.divider { height: 1px; background: var(--border); margin: 0 16px; }
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px; margin-bottom: 14px;
+}
+.card-header {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+}
+.card-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: rgba(255,107,157,0.1);
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.card-header h3 { font-size: 15px; font-weight: 700; }
+.card-header p { font-size: 12px; color: var(--text-mid); margin-top: 2px; }
+
+/* PROMPT BOX */
+.prompt-box {
+  background: var(--surface2);
+  border: 1px solid rgba(255,107,157,0.2);
+  border-radius: 12px; padding: 14px 16px;
+  font-size: 13px; color: var(--text-mid);
+  line-height: 1.7; position: relative; margin-bottom: 10px;
+}
+.prompt-box strong { color: var(--text); display: block; margin-bottom: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; }
+
+/* CAPTION BOX */
+.caption-box {
+  background: var(--surface2);
+  border-left: 3px solid var(--pink);
+  border-radius: 0 12px 12px 0;
+  padding: 14px 16px; font-size: 13px;
+  color: var(--text-mid); line-height: 1.8;
+  margin-bottom: 10px; position: relative;
+}
+.caption-box strong { color: var(--text); display: block; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; }
+.caption-box .link-placeholder {
+  background: rgba(255,107,157,0.15);
+  border: 1px dashed rgba(255,107,157,0.4);
+  border-radius: 6px; padding: 2px 8px;
+  color: var(--pink); font-weight: 700; font-size: 12px;
+}
+
+/* COPY BUTTON */
+.btn-copy {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 50px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  background: rgba(255,107,157,0.1);
+  border: 1px solid rgba(255,107,157,0.25);
+  color: var(--pink); transition: all 0.15s; margin-top: 8px;
+}
+.btn-copy:hover { background: rgba(255,107,157,0.2); }
+.btn-copy.copied { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.3); color: #4ade80; }
+
+/* HASHTAGS */
+.hashtags {
+  background: var(--surface2); border-radius: 12px;
+  padding: 14px 16px; font-size: 13px; color: #a78bfa;
+  line-height: 1.8;
+}
+
+/* INFO BOX */
+.info-box {
+  background: rgba(255,107,157,0.06);
+  border: 1px solid rgba(255,107,157,0.15);
+  border-radius: 14px; padding: 18px 20px;
+  font-size: 14px; line-height: 1.7; color: var(--text-mid);
+  margin-bottom: 14px;
+}
+.info-box strong { color: var(--pink); }
+
+/* LINK BOX */
+.link-box {
+  background: var(--surface2); border-radius: 12px;
+  padding: 16px; display: flex; align-items: center; gap: 12px;
+  border: 1px solid var(--border);
+}
+.link-box input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text-mid); font-size: 13px; font-family: inherit;
+}
+.btn-primary {
+  padding: 12px 28px; border: none; border-radius: 50px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white; transition: transform 0.15s;
+  box-shadow: 0 4px 20px rgba(255,107,157,0.3);
+}
+.btn-primary:hover { transform: scale(1.04); }
+
+/* RULES */
+.rule-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 14px; background: var(--surface2);
+  border-radius: 10px; margin-bottom: 8px; font-size: 13px;
+}
+.rule-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.rule-text { color: var(--text-mid); line-height: 1.5; }
+.rule-text strong { color: var(--text); }
+
+/* FOOTER */
+footer {
+  text-align: center; padding: 36px 20px;
+  font-size: 13px; color: var(--text-dim);
+  border-top: 1px solid var(--border); margin-top: 20px;
+}
+footer a { color: var(--pink); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">💕 Bem-vinda, Afiliada!</div>
+  <h1>Seu Kit Completo<br>para Começar a Vender</h1>
+  <p>Tudo que você precisa para divulgar o Glow Girl Up e receber <strong style="color:var(--pink)">R$12,88 por cada venda</strong> — sem investimento.</p>
+
+  <div class="steps">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Pegue seu link de afiliada</strong><span>No Kiwify → Meus Afiliados → copie seu link único</span></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>Gere as imagens no ChatGPT</strong><span>Use os prompts abaixo e salve as fotos no celular</span></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>Copie a legenda pronta</strong><span>Substitua [SEU LINK] pelo seu link de afiliada</span></div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-text"><strong>Poste e receba comissão</strong><span>R$12,88 cai automaticamente a cada venda</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LINK DE AFILIADA -->
+<div class="section">
+  <p class="section-label">Primeiro passo</p>
+  <h2>🔗 Seu link de afiliada</h2>
+  <div class="info-box">
+    Para pegar seu link: acesse o <strong>Kiwify → Meus Afiliados → Glow Girl Up Premium → Copiar link</strong>. Esse link é único — toda venda feita por ele é sua.
+  </div>
+  <div class="link-box">
+    <input type="text" id="linkInput" placeholder="Cole seu link de afiliada aqui..." />
+    <button class="btn-primary" onclick="saveLink()">Salvar</button>
+  </div>
+  <p style="font-size:12px;color:var(--text-dim);margin-top:8px;">O link será inserido automaticamente nas legendas abaixo.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- POST 1 -->
+<div class="section">
+  <p class="section-label">Material de Divulgação</p>
+  <h2>📸 Post 1 — Resultado & Transformação</h2>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🎨</div>
+      <div><h3>Prompt para ChatGPT</h3><p>Gera a imagem e salva no celular</p></div>
+    </div>
+    <div class="prompt-box">
+      <strong>Cole no ChatGPT:</strong>
+      Crie uma imagem vertical (9:16) para Instagram com estética feminina premium. Fundo gradiente de rosa vibrante para roxo profundo. Layout clean e moderno. Elementos: emoji ✨ grande no topo centralizado, texto em branco bold "Minha pele em 21 dias", subtítulo "com o Glow Girl Up", bloco central com fundo semi-transparente branco com 3 linhas: "✅ Skincare personalizado por IA", "✅ Rotina de hábitos completa", "✅ Resultados reais em 3 semanas". Rodapé "@glowgirlup.oficial". Estilo aesthetic minimalista, tipografia moderna sans-serif, sem fotos de pessoas.
+    </div>
+    <button class="btn-copy" onclick="copyText(this, 'prompt1')">📋 Copiar prompt</button>
+    <span id="prompt1" style="display:none">Crie uma imagem vertical (9:16) para Instagram com estética feminina premium. Fundo gradiente de rosa vibrante para roxo profundo. Layout clean e moderno. Elementos: emoji ✨ grande no topo centralizado, texto em branco bold "Minha pele em 21 dias", subtítulo "com o Glow Girl Up", bloco central com fundo semi-transparente branco com 3 linhas: "✅ Skincare personalizado por IA", "✅ Rotina de hábitos completa", "✅ Resultados reais em 3 semanas". Rodapé "@glowgirlup.oficial". Estilo aesthetic minimalista, tipografia moderna sans-serif, sem fotos de pessoas.</span>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">✍️</div>
+      <div><h3>Legenda Pronta</h3><p>Substitua [SEU LINK] ou salve seu link acima</p></div>
+    </div>
+    <div class="caption-box">
+      <strong>Copie e cole:</strong>
+      Eu não acreditava que ia funcionar... mas funcionou 🥹✨<br><br>
+      Em 3 semanas com o <strong>Glow Girl Up</strong> eu finalmente criei uma rotina que eu CONSIGO manter.<br><br>
+      O app monta sua rotina personalizada de skincare + hábitos + sono com IA. Você responde algumas perguntas e ele entrega tudo pronto.<br><br>
+      Tá com R$49,90 e honestamente? Valeu cada centavo.<br><br>
+      👇 Link pra testar grátis primeiro:<br>
+      <span class="link-placeholder" id="cap1-link">[SEU LINK AQUI]</span><br><br>
+      #glowgirlup #skincare #rotinadebeleza #selfcare #pelesaudavel #habitos #glowup #autocuidado #skincareroutine #beleza
+    </div>
+    <button class="btn-copy" onclick="copyCaption(this, 1)">📋 Copiar legenda</button>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- POST 2 -->
+<div class="section">
+  <h2>📸 Post 2 — Problema & Solução</h2>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🎨</div>
+      <div><h3>Prompt para ChatGPT</h3><p>Gera a imagem e salva no celular</p></div>
+    </div>
+    <div class="prompt-box">
+      <strong>Cole no ChatGPT:</strong>
+      Crie uma imagem vertical (9:16) para Instagram estilo "antes e depois" sem usar fotos reais. Fundo escuro azul-roxo gradiente. Dois blocos lado a lado: lado esquerdo com fundo avermelhado escuro, emoji 😩, texto "ANTES" em vermelho e 3 bullets negativos em vermelho claro: "Sem rotina", "Pele apagada", "Sem energia". Lado direito com fundo verde escuro, emoji ✨, texto "DEPOIS" em verde e 3 bullets positivos: "Rotina criada", "Pele brilhando", "Acordando bem". Centro da imagem logo "Glow Girl Up 💕". Estilo moderno, limpo, sem fotos de pessoas.
+    </div>
+    <button class="btn-copy" onclick="copyText(this, 'prompt2')">📋 Copiar prompt</button>
+    <span id="prompt2" style="display:none">Crie uma imagem vertical (9:16) para Instagram estilo "antes e depois" sem usar fotos reais. Fundo escuro azul-roxo gradiente. Dois blocos lado a lado: lado esquerdo com fundo avermelhado escuro, emoji 😩, texto "ANTES" em vermelho e 3 bullets negativos em vermelho claro: "Sem rotina", "Pele apagada", "Sem energia". Lado direito com fundo verde escuro, emoji ✨, texto "DEPOIS" em verde e 3 bullets positivos: "Rotina criada", "Pele brilhando", "Acordando bem". Centro da imagem logo "Glow Girl Up 💕". Estilo moderno, limpo, sem fotos de pessoas.</span>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">✍️</div>
+      <div><h3>Legenda Pronta</h3></div>
+    </div>
+    <div class="caption-box">
+      <strong>Copie e cole:</strong>
+      Acorda cansada, sem saber o que passar no rosto, sem rotina... 😩<br><br>
+      Era eu até pouco tempo atrás.<br><br>
+      O <strong>Glow Girl Up</strong> é um app que usa IA pra montar sua rotina completa — skincare, hábitos, sono — tudo personalizado pra você.<br><br>
+      Sem precisar pesquisar, sem precisar entender de nada. Você responde e ele monta.<br><br>
+      Já tem mulheres transformando a manhã delas com isso 🌅<br><br>
+      Experimenta grátis pelo link 👇<br>
+      <span class="link-placeholder" id="cap2-link">[SEU LINK AQUI]</span><br><br>
+      #glowgirlup #rotinafeminina #skincare #autocuidado #habitos #bemestar #glowup #selfcareroutine #belezafeminina #vidarotina
+    </div>
+    <button class="btn-copy" onclick="copyCaption(this, 2)">📋 Copiar legenda</button>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- POST 3 -->
+<div class="section">
+  <h2>📸 Post 3 — CTA Direto de Venda</h2>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🎨</div>
+      <div><h3>Prompt para ChatGPT</h3><p>Gera a imagem e salva no celular</p></div>
+    </div>
+    <div class="prompt-box">
+      <strong>Cole no ChatGPT:</strong>
+      Crie uma imagem vertical (9:16) para Instagram com visual de oferta premium feminina. Fundo gradiente rosa para roxo. Topo: emoji 🚀 grande. Título grande em branco bold: "Glow Girl Up Premium". Subtítulo: "Rotina completa por IA". Bloco central com bordas brancas arredondadas listando: "📅 Plano de 21 dias", "🌸 Skincare por tipo de pele", "✅ Checklist diário interativo", "💜 21 afirmações", "🌙 Protocolo de sono", "🥗 Alimentação anti-inflamatória". Abaixo: preço "R$ 49,90" em destaque grande. Rodapé: "glow-girl-up.vercel.app". Estilo premium, clean, sem fotos de pessoas.
+    </div>
+    <button class="btn-copy" onclick="copyText(this, 'prompt3')">📋 Copiar prompt</button>
+    <span id="prompt3" style="display:none">Crie uma imagem vertical (9:16) para Instagram com visual de oferta premium feminina. Fundo gradiente rosa para roxo. Topo: emoji 🚀 grande. Título grande em branco bold: "Glow Girl Up Premium". Subtítulo: "Rotina completa por IA". Bloco central com bordas brancas arredondadas listando: "📅 Plano de 21 dias", "🌸 Skincare por tipo de pele", "✅ Checklist diário interativo", "💜 21 afirmações", "🌙 Protocolo de sono", "🥗 Alimentação anti-inflamatória". Abaixo: preço "R$ 49,90" em destaque grande. Rodapé: "glow-girl-up.vercel.app". Estilo premium, clean, sem fotos de pessoas.</span>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">✍️</div>
+      <div><h3>Legenda Pronta</h3></div>
+    </div>
+    <div class="caption-box">
+      <strong>Copie e cole:</strong>
+      E se em 21 dias você tivesse uma rotina completa, pele cuidada e hábitos saudáveis? 💕<br><br>
+      O <strong>Glow Girl Up Premium</strong> é isso:<br>
+      📅 Plano de 21 dias passo a passo<br>
+      🌸 Skincare personalizado por tipo de pele<br>
+      ✅ Checklist diário interativo<br>
+      🌙 Protocolo completo de sono<br>
+      🥗 Guia de alimentação para a pele brilhar<br>
+      💜 21 afirmações diárias<br><br>
+      Tudo isso por R$49,90 — acesso imediato, sem mensalidade.<br><br>
+      Link direto 👇<br>
+      <span class="link-placeholder" id="cap3-link">[SEU LINK AQUI]</span><br><br>
+      #glowgirlup #skincarepremium #rotinafeminina #autocuidado #habitos #glowup #selfcare #pelesaudavel #bemestarsaudavel #transformacao
+    </div>
+    <button class="btn-copy" onclick="copyCaption(this, 3)">📋 Copiar legenda</button>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- HASHTAGS EXTRAS -->
+<div class="section">
+  <p class="section-label">Bônus</p>
+  <h2>#️⃣ Hashtags para todos os posts</h2>
+  <div class="hashtags" id="hashtags-box">
+    #glowgirlup #skincare #autocuidado #rotinadebeleza #selfcare #pelesaudavel #habitos #glowup #skincareroutine #beleza #rotinafeminina #bemestarsaudavel #transformacao #mulheresqueinspiram #vidafeminina #pelediva #beautycare #skincareaddict #viverbem #rotinasaudavel
+  </div>
+  <button class="btn-copy" style="margin-top:10px;" onclick="copyText(this, 'hashtags-box')">📋 Copiar hashtags</button>
+</div>
+
+<div class="divider"></div>
+
+<!-- REGRAS -->
+<div class="section">
+  <p class="section-label">Importante</p>
+  <h2>📋 Regras do programa</h2>
+
+  <div class="rule-item">
+    <div class="rule-icon">✅</div>
+    <div class="rule-text"><strong>Pode:</strong> postar em qualquer rede social, WhatsApp, grupos, stories, reels, TikTok, blogs.</div>
+  </div>
+  <div class="rule-item">
+    <div class="rule-icon">✅</div>
+    <div class="rule-text"><strong>Pode:</strong> adaptar as legendas com suas palavras, contar sua experiência pessoal.</div>
+  </div>
+  <div class="rule-item">
+    <div class="rule-icon">✅</div>
+    <div class="rule-text"><strong>Pode:</strong> marcar <strong>@glowgirlup.oficial</strong> nos posts para aumentar o alcance.</div>
+  </div>
+  <div class="rule-item">
+    <div class="rule-icon">❌</div>
+    <div class="rule-text"><strong>Não pode:</strong> spam, grupos de WhatsApp sem contexto, ou promessas exageradas que não condizem com o produto.</div>
+  </div>
+  <div class="rule-item">
+    <div class="rule-icon">❌</div>
+    <div class="rule-text"><strong>Não pode:</strong> usar o nome Glow Girl Up para criar produtos próprios ou páginas falsas.</div>
+  </div>
+  <div class="rule-item">
+    <div class="rule-icon">💰</div>
+    <div class="rule-text"><strong>Pagamento:</strong> comissões são pagas automaticamente pelo Kiwify no prazo padrão da plataforma (após aprovação da compra).</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- DÚVIDAS -->
+<div class="section" style="padding-bottom:20px;">
+  <p class="section-label">Suporte</p>
+  <h2>💬 Dúvidas?</h2>
+  <div class="info-box">
+    Fale com a gente pelo Instagram: <strong><a href="https://instagram.com/glowgirlup.oficial" target="_blank" style="color:var(--pink);text-decoration:none;">@glowgirlup.oficial</a></strong><br>
+    Respondemos todas as dúvidas por DM. 💕
+  </div>
+</div>
+
+<footer>
+  <p style="font-size:22px;margin-bottom:8px;">💕</p>
+  <p style="font-weight:700;margin-bottom:6px;">Glow Girl Up — Programa de Afiliadas</p>
+  <p><a href="https://instagram.com/glowgirlup.oficial" target="_blank">@glowgirlup.oficial</a></p>
+</footer>
+
+<script>
+// Salvar link da afiliada
+function saveLink() {
+  const val = document.getElementById('linkInput').value.trim();
+  if (!val) return;
+  localStorage.setItem('afilLink', val);
+  updateLinks(val);
+  const btn = document.querySelector('.btn-primary');
+  btn.textContent = '✅ Salvo!';
+  setTimeout(() => btn.textContent = 'Salvar', 2000);
+}
+
+function updateLinks(link) {
+  ['cap1-link','cap2-link','cap3-link'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = link;
+  });
+}
+
+// Carregar link salvo
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('afilLink');
+  if (saved) {
+    document.getElementById('linkInput').value = saved;
+    updateLinks(saved);
+  }
+});
+
+// Copiar texto genérico
+function copyText(btn, sourceId) {
+  const el = document.getElementById(sourceId);
+  const text = el.innerText || el.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copiar';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// Copiar legenda com link substituído
+function copyCaption(btn, num) {
+  const box = btn.previousElementSibling;
+  // Pega texto e substitui placeholder pelo link real
+  let text = box.innerText;
+  const link = localStorage.getItem('afilLink') || '[SEU LINK AQUI]';
+  text = text.replace(/Copie e cole:\s*/, '').replace('[SEU LINK AQUI]', link).trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copiar legenda';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>
