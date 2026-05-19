@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glow Girl Up — Sua Rotina Feminina Personalizada</title>
+  <meta name="description" content="Crie sua rotina glow up personalizada com IA em menos de 2 minutos. Gratuito." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --rose: #f4a7b9;
+      --blush: #fce4ec;
+      --cream: #fff8f5;
+      --nude: #e8d5c4;
+      --mocha: #8b6f5e;
+      --brown: #5c3d2e;
+      --text: #2d1b12;
+      --soft: #9e7b6b;
+      --white: #ffffff;
+      --gradient: linear-gradient(135deg, #fce4ec 0%, #fff8f5 40%, #fdf3e7 100%);
+      --gradient2: linear-gradient(160deg, #f8bbd0 0%, #fce4ec 50%, #fff8f5 100%);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ============ NAVBAR ============ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      background: rgba(255,248,245,0.92);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(244,167,185,0.2);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--mocha);
+      letter-spacing: 0.5px;
+    }
+
+    .nav-logo span { color: var(--rose); }
+
+    .nav-cta {
+      background: var(--rose);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-cta:hover {
+      background: var(--mocha);
+      transform: translateY(-1px);
+    }
+
+    /* ============ HERO ============ */
+    .hero {
+      min-height: 100vh;
+      background: var(--gradient2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(244,167,185,0.3) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(232,213,196,0.4) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid rgba(244,167,185,0.4);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 12px;
+      color: var(--mocha);
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(42px, 8vw, 76px);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--brown);
+      margin-bottom: 8px;
+      letter-spacing: -1px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--rose);
+    }
+
+    .hero-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 4vw, 32px);
+      font-weight: 300;
+      color: var(--mocha);
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: var(--soft);
+      max-width: 380px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+
+    .hero-btn {
+      background: linear-gradient(135deg, var(--rose), #e91e8c20, var(--rose));
+      background: linear-gradient(135deg, #f06292, #e57373);
+      color: white;
+      border: none;
+      padding: 18px 44px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      letter-spacing: 0.3px;
+      box-shadow: 0 8px 30px rgba(240,98,146,0.35);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(240,98,146,0.45);
+    }
+
+    .hero-social {
+      margin-top: 40px;
+      font-size: 13px;
+      color: var(--soft);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-avatars {
+      display: flex;
+    }
+
+    .hero-avatars span {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid white;
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      background: linear-gradient(135deg, var(--rose), var(--nude));
+    }
+
+    /* ============ DORES ============ */
+    .section-dores {
+      padding: 80px 24px;
+      background: white;
+    }
+
+    .section-label {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 6vw, 52px);
+      font-weight: 300;
+      text-align: center;
+      color: var(--brown);
+      line-height: 1.2;
+      margin-bottom: 50px;
+    }
+
+    .section-title em { font-style: italic; color: var(--rose); }
+
+    .dores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .dor-card {
+      background: var(--cream);
+      border: 1px solid rgba(244,167,185,0.2);
+      border-radius: 20px;
+      padding: 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .dor-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    /* ============ SOLUÇÃO ============ */
+    .section-solucao {
+      padding: 80px 24px;
+      background: var(--gradient);
+    }
+
+    .solucao-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .solucao-card {
+      background: white;
+      border-radius: 24px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(244,167,185,0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .solucao-card:hover { transform: translateY(-4px); }
+
+    .solucao-icon {
+      font-size: 36px;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .solucao-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--brown);
+      margin-bottom: 8px;
+    }
+
+    .solucao-desc {
+      font-size: 13px;
+      color: var(--soft);
+      line-height: 1.6;
+    }
+
+    /* ============ FORM SECTION ============ */
+    .section-form {
+      padding: 80px 24px;
+      background: white;
+    }
+
+    .form-container {
+      max-width: 540px;
+      margin: 0 auto;
+      background: var(--cream);
+      border-radius: 32px;
+      padding: 44px 36px;
+      box-shadow: 0 20px 60px rgba(244,167,185,0.2);
+      border: 1px solid rgba(244,167,185,0.3);
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .form-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 300;
+      color: var(--brown);
+      margin-bottom: 10px;
+    }
+
+    .form-header p {
+      font-size: 14px;
+      color: var(--soft);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--mocha);
+      margin-bottom: 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid rgba(244,167,185,0.4);
+      border-radius: 14px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: white;
+      transition: all 0.3s ease;
+      outline: none;
+      appearance: none;
+    }
+
+    .form-input:focus, .form-select:focus {
+      border-color: var(--rose);
+      box-shadow: 0 0 0 4px rgba(244,167,185,0.15);
+    }
+
+    .form-input::placeholder { color: #ccc; }
+
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .checkbox-item {
+      position: relative;
+    }
+
+    .checkbox-item input {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+      background: white;
+      border: 1.5px solid rgba(244,167,185,0.3);
+      border-radius: 12px;
+      font-size: 13px;
+      color: var(--mocha);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .checkbox-item input:checked + .checkbox-label {
+      background: var(--blush);
+      border-color: var(--rose);
+      color: var(--brown);
+      font-weight: 500;
+    }
+
+    .checkbox-label:hover {
+      border-color: var(--rose);
+      background: var(--cream);
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #f06292, #e57373);
+      color: white;
+      border: none;
+      padding: 18px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-top: 10px;
+      letter-spacing: 0.3px;
+      box-shadow: 0 8px 30px rgba(240,98,146,0.3);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(240,98,146,0.4);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ============ LOADING ============ */
+    .loading-screen {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(255,248,245,0.97);
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .loading-screen.active { display: flex; }
+
+    .loading-spinner {
+      width: 60px; height: 60px;
+      border: 3px solid rgba(244,167,185,0.3);
+      border-top-color: var(--rose);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 24px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      color: var(--brown);
+      margin-bottom: 10px;
+    }
+
+    .loading-sub {
+      font-size: 13px;
+      color: var(--soft);
+      max-width: 280px;
+    }
+
+    .loading-steps {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .loading-step {
+      font-size: 13px;
+      color: var(--soft);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .loading-step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============ RESULTADO ============ */
+    .result-screen {
+      display: none;
+      min-height: 100vh;
+      background: var(--gradient);
+      padding: 80px 20px 40px;
+    }
+
+    .result-screen.active { display: block; }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 0 16px;
+    }
+
+    .result-name {
+      font-size: 13px;
+      color: var(--soft);
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .result-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(34px, 7vw, 56px);
+      font-weight: 300;
+      color: var(--brown);
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .result-title em { font-style: italic; color: var(--rose); }
+
+    .result-subtitle {
+      font-size: 14px;
+      color: var(--soft);
+    }
+
+    /* ============ ROTINA CARD ============ */
+    .routine-card {
+      max-width: 600px;
+      margin: 0 auto 24px;
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 16px 48px rgba(244,167,185,0.2);
+    }
+
+    .routine-card-header {
+      background: linear-gradient(135deg, #f8bbd0, #fce4ec);
+      padding: 28px 30px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .routine-card-icon {
+      font-size: 32px;
+    }
+
+    .routine-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--brown);
+    }
+
+    .routine-card-desc {
+      font-size: 13px;
+      color: var(--mocha);
+      margin-top: 3px;
+    }
+
+    .routine-card-body {
+      padding: 24px 30px;
+    }
+
+    .routine-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(244,167,185,0.15);
+    }
+
+    .routine-item:last-child { border-bottom: none; }
+
+    .routine-time {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--rose);
+      letter-spacing: 0.5px;
+      min-width: 50px;
+      padding-top: 2px;
+    }
+
+    .routine-content { flex: 1; }
+
+    .routine-action {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+
+    .routine-tip {
+      font-size: 12px;
+      color: var(--soft);
+      line-height: 1.5;
+    }
+
+    .routine-check {
+      width: 22px; height: 22px;
+      border: 2px solid rgba(244,167,185,0.5);
+      border-radius: 50%;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: transparent;
+    }
+
+    .routine-check.checked {
+      background: var(--rose);
+      border-color: var(--rose);
+      color: white;
+    }
+
+    /* ============ PLANO 7 DIAS ============ */
+    .days-grid {
+      max-width: 600px;
+      margin: 0 auto 24px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .day-card {
+      background: white;
+      border-radius: 16px;
+      padding: 14px 8px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(244,167,185,0.12);
+    }
+
+    .day-card.featured {
+      background: linear-gradient(135deg, var(--rose), #e57373);
+      color: white;
+    }
+
+    .day-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--brown);
+    }
+
+    .day-card.featured .day-num { color: white; }
+
+    .day-label {
+      font-size: 10px;
+      color: var(--soft);
+      margin-top: 2px;
+    }
+
+    .day-card.featured .day-label { color: rgba(255,255,255,0.85); }
+
+    .day-emoji {
+      font-size: 18px;
+      margin: 6px 0;
+    }
+
+    /* ============ AFIRMAÇÕES ============ */
+    .affirmation-card {
+      max-width: 600px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, #f8bbd0 0%, #fce4ec 100%);
+      border-radius: 28px;
+      padding: 36px 30px;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(244,167,185,0.2);
+    }
+
+    .affirmation-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mocha);
+      margin-bottom: 16px;
+    }
+
+    .affirmation-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 5vw, 30px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--brown);
+      line-height: 1.4;
+    }
+
+    /* ============ AÇÕES RESULTADO ============ */
+    .result-actions {
+      max-width: 600px;
+      margin: 0 auto 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .action-btn {
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .action-btn-primary {
+      background: linear-gradient(135deg, #f06292, #e57373);
+      color: white;
+      box-shadow: 0 8px 24px rgba(240,98,146,0.3);
+      grid-column: 1 / -1;
+      padding: 20px;
+      font-size: 15px;
+    }
+
+    .action-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(240,98,146,0.4);
+    }
+
+    .action-btn-secondary {
+      background: white;
+      color: var(--mocha);
+      border: 1.5px solid rgba(244,167,185,0.4);
+    }
+
+    .action-btn-secondary:hover {
+      border-color: var(--rose);
+      background: var(--blush);
+    }
+
+    .action-btn-share {
+      background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+      color: white;
+    }
+
+    /* ============ SHARE CARD (para salvar) ============ */
+    .share-card-wrapper {
+      max-width: 600px;
+      margin: 0 auto 24px;
+    }
+
+    #shareCard {
+      background: linear-gradient(160deg, #f8bbd0 0%, #fce4ec 40%, #fff8f5 100%);
+      border-radius: 28px;
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #shareCard::before {
+      content: '✿';
+      position: absolute;
+      top: -20px; right: -20px;
+      font-size: 100px;
+      opacity: 0.08;
+    }
+
+    .share-brand {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--mocha);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .share-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 300;
+      color: var(--brown);
+      margin-bottom: 4px;
+    }
+
+    .share-name em { font-style: italic; color: var(--rose); }
+
+    .share-tagline {
+      font-size: 13px;
+      color: var(--soft);
+      margin-bottom: 28px;
+    }
+
+    .share-goals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .share-goal-tag {
+      background: white;
+      border: 1px solid rgba(244,167,185,0.5);
+      padding: 7px 16px;
+      border-radius: 50px;
+      font-size: 12px;
+      color: var(--mocha);
+    }
+
+    .share-affirmation {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-style: italic;
+      color: var(--brown);
+      line-height: 1.5;
+      padding: 20px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .share-watermark {
+      font-size: 12px;
+      color: var(--soft);
+      letter-spacing: 1px;
+    }
+
+    /* ============ DEPOIMENTOS ============ */
+    .section-depoimentos {
+      padding: 80px 24px;
+      background: white;
+    }
+
+    .depo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .depo-card {
+      background: var(--cream);
+      border-radius: 24px;
+      padding: 28px 24px;
+      border: 1px solid rgba(244,167,185,0.2);
+    }
+
+    .depo-stars {
+      color: var(--rose);
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .depo-text {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .depo-author {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .depo-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background: linear-gradient(135deg, var(--blush), var(--nude));
+    }
+
+    .depo-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--brown);
+    }
+
+    .depo-info {
+      font-size: 11px;
+      color: var(--soft);
+    }
+
+    /* ============ PREMIUM ============ */
+    .section-premium {
+      padding: 80px 24px;
+      background: var(--gradient);
+      text-align: center;
+    }
+
+    .premium-card {
+      max-width: 440px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 32px;
+      padding: 48px 36px;
+      box-shadow: 0 24px 80px rgba(244,167,185,0.25);
+    }
+
+    .premium-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--rose), #e57373);
+      color: white;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      border-radius: 50px;
+      margin-bottom: 24px;
+    }
+
+    .premium-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      color: var(--brown);
+      margin-bottom: 8px;
+    }
+
+    .premium-price {
+      margin: 24px 0;
+    }
+
+    .price-label {
+      font-size: 13px;
+      color: var(--soft);
+    }
+
+    .price-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 600;
+      color: var(--brown);
+      line-height: 1;
+    }
+
+    .price-period {
+      font-size: 14px;
+      color: var(--soft);
+    }
+
+    .premium-features {
+      list-style: none;
+      text-align: left;
+      margin: 28px 0;
+    }
+
+    .premium-features li {
+      padding: 10px 0;
+      font-size: 14px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(244,167,185,0.15);
+    }
+
+    .premium-features li:last-child { border-bottom: none; }
+
+    .feature-check {
+      color: var(--rose);
+      font-weight: 600;
+    }
+
+    .premium-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #f06292, #e57373);
+      color: white;
+      border: none;
+      padding: 20px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 8px 30px rgba(240,98,146,0.35);
+    }
+
+    .premium-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(240,98,146,0.45);
+    }
+
+    /* ============ FOOTER ============ */
+    footer {
+      background: var(--brown);
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 40px 24px;
+      font-size: 13px;
+    }
+
+    footer .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    footer .footer-logo span { color: var(--rose); }
+
+    /* ============ UTILS ============ */
+    .hidden { display: none !important; }
+
+    .main-app { display: block; }
+
+    @media (max-width: 480px) {
+      .form-container {
+        padding: 32px 22px;
+        border-radius: 24px;
+      }
+
+      .checkbox-group {
+        grid-template-columns: 1fr;
+      }
+
+      .result-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .action-btn-primary { grid-column: 1; }
+
+      .days-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+
+      .day-card { padding: 10px 4px; }
+      .day-label { display: none; }
+
+      .routine-card-body { padding: 20px 18px; }
+
+      .premium-card { padding: 36px 24px; }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .delay-4 { animation-delay: 0.4s; opacity: 0; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Glow Girl <span>Up</span></div>
+  <button class="nav-cta" onclick="scrollToForm()">Criar minha rotina ✨</button>
+</nav>
+
+<!-- LOADING -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Criando sua rotina...</div>
+  <div class="loading-sub">Nossa IA está montando seu plano personalizado 🌸</div>
+  <div class="loading-steps">
+    <div class="loading-step" id="step1">✨ Analisando seus objetivos...</div>
+    <div class="loading-step" id="step2">🌸 Montando rotina matinal...</div>
+    <div class="loading-step" id="step3">💫 Criando plano de 7 dias...</div>
+    <div class="loading-step" id="step4">✅ Finalizando seu glow up...</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="main-app" id="mainApp">
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-badge">🌸 Mais de 12.000 rotinas criadas</div>
+    <h1 class="hero-title fade-in-up">Sua rotina<br><em>glow up</em><br>começa aqui</h1>
+    <p class="hero-subtitle fade-in-up delay-1">Criada com IA, em 2 minutos</p>
+    <p class="hero-desc fade-in-up delay-2">
+      Chega de procrastinar. Nossa IA cria sua rotina feminina completa —<br>
+      matinal, noturna e plano de 7 dias personalizado.
+    </p>
+    <button class="hero-btn fade-in-up delay-3" onclick="scrollToForm()">
+      ✨ Criar minha rotina grátis
+    </button>
+    <div class="hero-social fade-in-up delay-4">
+      <div class="hero-avatars">
+        <span>🌸</span><span>💫</span><span>✨</span>
+      </div>
+      12.847 mulheres já fizeram o glow up delas
+    </div>
+  </section>
+
+  <!-- DORES -->
+  <section class="section-dores">
+    <div class="section-label">Você se identifica?</div>
+    <h2 class="section-title">Quantas vezes você já<br><em>prometeu começar</em><br>na segunda-feira?</h2>
+    <div class="dores-grid">
+      <div class="dor-card"><span class="dor-icon">😮‍💨</span> Salva vídeos de rotina mas nunca aplica nenhum</div>
+      <div class="dor-card"><span class="dor-icon">🤯</span> Começa a semana animada, para na quarta</div>
+      <div class="dor-card"><span class="dor-icon">😔</span> Quer se cuidar mais mas não sabe por onde começar</div>
+      <div class="dor-card"><span class="dor-icon">💤</span> Acorda já estressada e sem energia</div>
+      <div class="dor-card"><span class="dor-icon">📱</span> Passa horas no TikTok vendo glow up dos outros</div>
+      <div class="dor-card"><span class="dor-icon">🌀</span> Sente que a vida tá bagunçada e você fora de controle</div>
+    </div>
+  </section>
+
+  <!-- SOLUÇÃO -->
+  <section class="section-solucao">
+    <div class="section-label">A solução</div>
+    <h2 class="section-title">Uma rotina feita<br><em>para você</em></h2>
+    <div class="solucao-grid">
+      <div class="solucao-card">
+        <span class="solucao-icon">🌅</span>
+        <div class="solucao-title">Rotina Matinal</div>
+        <p class="solucao-desc">Comece o dia com intenção. Cada passo criado para o seu estilo de vida.</p>
+      </div>
+      <div class="solucao-card">
+        <span class="solucao-icon">🌙</span>
+        <div class="solucao-title">Rotina Noturna</div>
+        <p class="solucao-desc">Encerre o dia se sentindo realizada. Skincare, reflexão e descanso.</p>
+      </div>
+      <div class="solucao-card">
+        <span class="solucao-icon">📅</span>
+        <div class="solucao-title">Plano de 7 Dias</div>
+        <p class="solucao-desc">Uma semana completa com foco progressivo para transformação real.</p>
+      </div>
+      <div class="solucao-card">
+        <span class="solucao-icon">💫</span>
+        <div class="solucao-title">Hábitos Aesthetic</div>
+        <p class="solucao-desc">Pequenos hábitos que fazem você se sentir a melhor versão de si mesma.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMULÁRIO -->
+  <section class="section-form" id="formSection">
+    <div class="form-container">
+      <div class="form-header">
+        <div style="font-size:36px; margin-bottom:12px;">✨</div>
+        <h2>Criar minha rotina</h2>
+        <p>Responda 6 perguntas e receba seu plano 100% personalizado</p>
+      </div>
+
+      <form id="glowForm" onsubmit="generateRoutine(event)">
+        <div class="form-group">
+          <label class="form-label">Qual é o seu nome? 🌸</label>
+          <input type="text" class="form-input" id="userName" placeholder="Ex: Mariana" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Como você se sente hoje?</label>
+          <select class="form-select" id="userMood" required>
+            <option value="">Selecione...</option>
+            <option value="perdida">😮‍💨 Perdida e sem direção</option>
+            <option value="cansada">😴 Cansada e sem energia</option>
+            <option value="ansiosa">😰 Ansiosa e sobrecarregada</option>
+            <option value="motivada">💪 Motivada mas sem consistência</option>
+            <option value="triste">😔 Triste com minha aparência</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Qual horário você acorda?</label>
+          <select class="form-select" id="wakeTime" required>
+            <option value="">Selecione...</option>
+            <option value="5h">🌅 5h - 6h (early bird)</option>
+            <option value="7h">☀️ 6h - 7h30 (manhã cedo)</option>
+            <option value="8h">🌤️ 7h30 - 9h (tranquila)</option>
+            <option value="10h">🕙 9h+ (coruja)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Qual é o seu tipo de pele? 💆‍♀️</label>
+          <select class="form-select" id="skinType" required>
+            <option value="">Selecione...</option>
+            <option value="oleosa">✨ Oleosa (brilho ao longo do dia)</option>
+            <option value="seca">🌸 Seca (sensação de repuxamento)</option>
+            <option value="mista">🌿 Mista (oleosa no T, seca nas bochechas)</option>
+            <option value="sensivel">🌷 Sensível (irrita ou avermeia fácil)</option>
+            <option value="normal">💫 Normal (equilibrada, poucas queixas)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Como está seu sono atualmente? 😴</label>
+          <select class="form-select" id="sleepQuality" required>
+            <option value="">Selecione...</option>
+            <option value="pessimo">😩 Péssimo — durmo pouco e acordo exausta</option>
+            <option value="irregular">😪 Irregular — às vezes bem, às vezes horrível</option>
+            <option value="ok">😐 Ok — durmo, mas não me sinto descansada</option>
+            <option value="bom">😊 Bom — consigo descansar na maioria dos dias</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">O que você mais quer transformar? (pode marcar mais de um)</label>
+          <div class="checkbox-group">
+            <div class="checkbox-item">
+              <input type="checkbox" id="g1" value="skincare" />
+              <label class="checkbox-label" for="g1">💆‍♀️ Skincare</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="g2" value="corpo" />
+              <label class="checkbox-label" for="g2">🏃‍♀️ Corpo</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="g3" value="mente" />
+              <label class="checkbox-label" for="g3">🧠 Mente</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="g4" value="estilo" />
+              <label class="checkbox-label" for="g4">👗 Estilo</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="g5" value="organizacao" />
+              <label class="checkbox-label" for="g5">📋 Organização</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="g6" value="habitos" />
+              <label class="checkbox-label" for="g6">✨ Hábitos</label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          ✨ Criar minha rotina Glow Girl Up
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS -->
+  <section class="section-depoimentos">
+    <div class="section-label">Resultados reais</div>
+    <h2 class="section-title">Elas já fizeram<br>o <em>glow up</em> delas</h2>
+    <div class="depo-grid">
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"Eu tentei montar minha rotina por MESES e nunca conseguia manter. Em 2 minutos a IA criou exatamente o que eu precisava. Faz 3 semanas seguindo e já sinto diferença!"</p>
+        <div class="depo-author">
+          <div class="depo-avatar">🌸</div>
+          <div>
+            <div class="depo-name">Larissa M.</div>
+            <div class="depo-info">São Paulo, SP • 24 anos</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"A rotina noturna mudou minha vida. Eu dormia mal, ficava no celular até tarde. Agora tenho um ritual que me acalma e acordo renovada. Parece clichê mas é real!"</p>
+        <div class="depo-author">
+          <div class="depo-avatar">💫</div>
+          <div>
+            <div class="depo-name">Camila R.</div>
+            <div class="depo-info">Rio de Janeiro, RJ • 29 anos</div>
+          </div>
+        </div>
+      </div>
+      <div class="depo-card">
+        <div class="depo-stars">★★★★★</div>
+        <p class="depo-text">"Salvei no Instagram e mandei pra todas as minhas amigas. O plano de 7 dias é incrível, cada dia com um foco diferente. Depois de 2 semanas me sinto uma nova pessoa."</p>
+        <div class="depo-author">
+          <div class="depo-avatar">✨</div>
+          <div>
+            <div class="depo-name">Fernanda K.</div>
+            <div class="depo-info">Curitiba, PR • 31 anos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREMIUM -->
+  <section class="section-premium">
+    <div class="section-label">Próximo nível</div>
+    <h2 class="section-title">Versão <em>Premium</em></h2>
+    <div class="premium-card">
+      <div class="premium-badge">Mais popular ✨</div>
+      <div class="premium-title">Glow Girl Up Premium</div>
+      <p style="font-size:14px; color:var(--soft)">Transformação completa, acelerada</p>
+      <div class="premium-price">
+        <div class="price-label">apenas</div>
+        <div class="price-value">R$49,90</div>
+        <div class="price-period">pagamento único • acesso vitalício</div>
+      </div>
+      <ul class="premium-features">
+        <li><span class="feature-check">✦</span> Rotina completa regenerada toda semana</li>
+        <li><span class="feature-check">✦</span> Plano de 30 dias detalhado</li>
+        <li><span class="feature-check">✦</span> Tracker de hábitos aesthetic (PDF)</li>
+        <li><span class="feature-check">✦</span> Biblioteca de afirmações personalizadas</li>
+        <li><span class="feature-check">✦</span> Guia de skincare por tipo de pele</li>
+        <li><span class="feature-check">✦</span> Planner semanal para imprimir</li>
+        <li><span class="feature-check">✦</span> Comunidade exclusiva no Telegram</li>
+      </ul>
+      <button class="premium-btn" onclick="window.open('https://kiwify.com.br','_blank')">
+        Quero o Premium ✨
+      </button>
+      <p style="font-size:12px; color:var(--soft); margin-top:16px;">🔒 Pagamento seguro via Kiwify</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo">Glow Girl <span>Up</span></div>
+    <p>© 2026 Glow Girl Up • Todos os direitos reservados</p>
+    <p style="margin-top:8px; font-size:12px;">Feito com 🌸 para mulheres que querem se tornar a melhor versão de si mesmas</p>
+  </footer>
+
+</div><!-- end main-app -->
+
+<!-- RESULTADO -->
+<div class="result-screen" id="resultScreen">
+
+  <!-- nav simples no resultado -->
+  <nav style="position:fixed; top:0; left:0; right:0; z-index:100; padding:16px 24px; background:rgba(255,248,245,0.92); backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(244,167,185,0.2);">
+    <div class="nav-logo">Glow Girl <span style="color:var(--rose)">Up</span></div>
+    <button class="nav-cta" onclick="resetApp()">← Nova rotina</button>
+  </nav>
+
+  <div class="result-header fade-in-up">
+    <div class="result-name" id="resultName"></div>
+    <h1 class="result-title">Sua rotina<br><em>glow up</em><br>está pronta ✨</h1>
+    <p class="result-subtitle">Plano personalizado criado com IA</p>
+  </div>
+
+  <!-- AFIRMAÇÃO DO DIA -->
+  <div class="affirmation-card fade-in-up delay-1" id="affirmationCard">
+    <div class="affirmation-label">✨ Sua afirmação do dia</div>
+    <div class="affirmation-text" id="affirmationText"></div>
+  </div>
+
+  <!-- ROTINA MATINAL -->
+  <div class="routine-card fade-in-up delay-1" id="morningCard">
+    <div class="routine-card-header">
+      <span class="routine-card-icon">🌅</span>
+      <div>
+        <div class="routine-card-title">Rotina Matinal</div>
+        <div class="routine-card-desc" id="morningTime">Ritual do amanhecer</div>
+      </div>
+    </div>
+    <div class="routine-card-body" id="morningRoutine"></div>
+  </div>
+
+  <!-- ROTINA NOTURNA -->
+  <div class="routine-card fade-in-up delay-2">
+    <div class="routine-card-header" style="background: linear-gradient(135deg, #e1bee7, #f3e5f5);">
+      <span class="routine-card-icon">🌙</span>
+      <div>
+        <div class="routine-card-title">Rotina Noturna</div>
+        <div class="routine-card-desc">Ritual do entardecer</div>
+      </div>
+    </div>
+    <div class="routine-card-body" id="eveningRoutine"></div>
+  </div>
+
+  <!-- SKINCARE PERSONALIZADO -->
+  <div class="routine-card fade-in-up delay-2" id="skincareCard">
+    <div class="routine-card-header" style="background:linear-gradient(135deg,#fce4ec,#f8bbd0);">
+      <span class="routine-card-icon">💆‍♀️</span>
+      <div>
+        <div class="routine-card-title">Skincare Personalizado</div>
+        <div class="routine-card-desc">Para pele sua</div>
+      </div>
+    </div>
+    <div class="routine-card-body"></div>
+  </div>
+
+  <!-- ROTINA DE SONO -->
+  <div class="routine-card fade-in-up delay-3" id="sleepCard">
+    <div class="routine-card-header" style="background:linear-gradient(135deg,#e8eaf6,#ede7f6);">
+      <span class="routine-card-icon">😴</span>
+      <div>
+        <div class="routine-card-title">Seu Ritual de Sono</div>
+        <div class="routine-card-desc">Ritual noturno</div>
+      </div>
+    </div>
+    <div class="routine-card-body"></div>
+  </div>
+
+  <!-- PLANO 7 DIAS -->
+  <div style="max-width:600px; margin:0 auto 24px; padding:0 4px;">
+    <div style="background:white; border-radius:28px; overflow:hidden; box-shadow:0 16px 48px rgba(244,167,185,0.2);">
+      <div style="background:linear-gradient(135deg,#fce4ec,#fff8f5); padding:24px 28px 20px; display:flex; align-items:center; gap:12px;">
+        <span style="font-size:28px;">📅</span>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; color:var(--brown);">Plano de 7 Dias</div>
+          <div style="font-size:13px; color:var(--mocha);">Cada dia com um foco especial</div>
+        </div>
+      </div>
+      <div style="padding:20px 24px;" id="weekPlan"></div>
+    </div>
+  </div>
+
+  <!-- SHARE CARD -->
+  <div class="share-card-wrapper">
+    <div id="shareCard">
+      <div class="share-brand">✦ GLOW GIRL UP ✦</div>
+      <div class="share-name">Rotina de <em id="shareUserName"></em></div>
+      <div class="share-tagline">Criada com Inteligência Artificial 🌸</div>
+      <div class="share-goals" id="shareGoals"></div>
+      <div class="share-affirmation" id="shareAffirmation"></div>
+      <div class="share-watermark">@glowgirlup.oficial • Sua transformação começa hoje ✨</div>
+    </div>
+  </div>
+
+  <!-- AÇÕES -->
+  <div class="result-actions">
+    <button class="action-btn action-btn-primary" onclick="downloadPDF()">
+      📄 Baixar minha rotina em PDF
+    </button>
+    <button class="action-btn action-btn-secondary" onclick="saveAsImage()">
+      📸 Salvar como imagem
+    </button>
+    <button class="action-btn action-btn-share" onclick="shareInstagram()">
+      📱 Compartilhar no Instagram
+    </button>
+  </div>
+
+  <!-- CTA PREMIUM -->
+  <div style="max-width:600px; margin:0 auto 80px; background:linear-gradient(135deg,#f06292,#e57373); border-radius:28px; padding:36px 28px; text-align:center; color:white;">
+    <div style="font-size:28px; margin-bottom:12px;">💎</div>
+    <div style="font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:300; margin-bottom:8px;">Quer ir mais fundo?</div>
+    <p style="font-size:14px; opacity:0.9; margin-bottom:24px; line-height:1.6;">Com o Premium você tem rotina renovada toda semana, plano de 30 dias, tracker de hábitos, guia de skincare e muito mais.</p>
+    <button onclick="window.open('https://kiwify.com.br','_blank')" style="background:white; color:#e57373; border:none; padding:16px 36px; border-radius:50px; font-size:15px; font-weight:600; cursor:pointer; transition:all 0.3s ease;">
+      Ver Glow Girl Up Premium →
+    </button>
+  </div>
+
+</div><!-- end result-screen -->
+
+<script>
+// ============ DATA ============
+const routineData = {
+  morning: {
+    perdida: [
+      { time: '5 min', action: 'Não pegue o celular', tip: 'Respire fundo 3x antes de abrir os olhos. Esse momento é seu.' },
+      { time: '10 min', action: 'Hidratação + afirmação', tip: 'Beba 1 copo de água com limão. Diga em voz alta: "Hoje eu me cuido."' },
+      { time: '15 min', action: 'Movimento leve', tip: 'Alongamento, caminhada ou ioga. Você não precisa de academia para começar.' },
+      { time: '10 min', action: 'Skincare matinal', tip: 'Limpeza facial + hidratante + protetor solar. 3 passos, consistência é tudo.' },
+      { time: '10 min', action: 'Café da manhã consciente', tip: 'Sem tela. Só você e seu café. 10 minutos de presença total.' },
+      { time: '5 min', action: 'Uma intenção pro dia', tip: 'Escreva UMA coisa que fará hoje com intenção. Só uma.' },
+    ],
+    cansada: [
+      { time: '5 min', action: 'Acorde sem alarme de stress', tip: 'Durma 15 min antes para acordar naturalmente. A diferença é enorme.' },
+      { time: '10 min', action: 'Água + banho revigorante', tip: 'Água gelada por 30 segundos no final. Funciona melhor que café.' },
+      { time: '10 min', action: 'Luz solar direta', tip: 'Sente na janela ou varanda. 10 min de sol pela manhã muda o humor.' },
+      { time: '10 min', action: 'Skincare lento', tip: 'Faça com calma. É seu momento de autocuidado, não uma tarefa.' },
+      { time: '15 min', action: 'Café da manhã proteico', tip: 'Ovos, iogurte ou whey. Proteína pela manhã sustenta a energia.' },
+      { time: '5 min', action: 'Liste 3 gratidões', tip: 'Pequenas ou grandes. Mudar o foco muda o dia.' },
+    ],
+    ansiosa: [
+      { time: '10 min', action: 'Respiração 4-7-8', tip: 'Inspira 4s, segura 7s, solta 8s. Repita 4 vezes. Ansiedade cai.' },
+      { time: '5 min', action: 'Não abra redes sociais', tip: 'Primeiros 30 minutos sem tela. Seu cérebro agradece.' },
+      { time: '15 min', action: 'Movimento que acalma', tip: 'Caminhada, ioga, pilates. Exercício é o melhor ansiolítico natural.' },
+      { time: '10 min', action: 'Skincare como meditação', tip: 'Faça cada passo com presença. Skincare é ritual, não tarefa.' },
+      { time: '10 min', action: 'Café da manhã sem notícias', tip: 'Música calma ou silêncio. Alimentação consciente reduz cortisol.' },
+      { time: '5 min', action: 'Escreva seu maior medo de hoje', tip: 'Coloque no papel. Na maioria das vezes, parece menor escrito.' },
+    ],
+    motivada: [
+      { time: '5 min', action: 'Revisão dos seus objetivos', tip: 'Leia em voz alta o que você quer alcançar. Isso ativa seu cérebro.' },
+      { time: '20 min', action: 'Treino ou movimento forte', tip: 'Aproveite a energia. Cardio, treino funcional ou dança.' },
+      { time: '10 min', action: 'Skincare + make básica', tip: 'Se cuidar visualmente reflete a autoestima que você está construindo.' },
+      { time: '15 min', action: 'Café da manhã planejado', tip: 'Prepare algo nutritivo que você gosta. Você merece.' },
+      { time: '10 min', action: 'Planejamento do dia', tip: 'Top 3 tarefas do dia. Foco em movimento, não em perfeição.' },
+      { time: '5 min', action: 'Uma afirmação poderosa', tip: '"Estou construindo a versão que sempre quis ser." Acredite.' },
+    ],
+    triste: [
+      { time: '10 min', action: 'Comece gentilmente', tip: 'Coloque uma música que você ama antes de sair da cama.' },
+      { time: '10 min', action: 'Banho quente e aromaterapia', tip: 'Lavanda ou laranja doce. Cheiros têm poder emocional imenso.' },
+      { time: '15 min', action: 'Skincare com carinho', tip: 'Olhe nos seus olhos no espelho. Diga algo gentil para você.' },
+      { time: '10 min', action: 'Luz + movimento suave', tip: 'Não precisa de treino pesado. Só movimente o corpo com amor.' },
+      { time: '10 min', action: 'Algo gostoso no café', tip: 'Você merece um bom café da manhã. Sem culpa.' },
+      { time: '5 min', action: 'Escreva 1 coisa bonita sobre você', tip: 'Só uma. Pode ser físico, pode ser personalidade. Só uma.' },
+    ],
+  },
+  evening: [
+    { time: '30 min', action: 'Modo avião às 21h', tip: 'Sem redes sociais após as 21h. Seu sono (e sua mente) transformam.' },
+    { time: '15 min', action: 'Skincare noturno completo', tip: 'Desmaquiagem + limpeza + tônico + sérum + hidratante. A pele regenera à noite.' },
+    { time: '10 min', action: 'Banho relaxante', tip: 'Temperatura morna. Adicione sal grosso para relaxar os músculos.' },
+    { time: '10 min', action: 'Diário de 3 perguntas', tip: '1. O que foi bom hoje? 2. O que aprendi? 3. O que amanhã vai ser melhor?' },
+    { time: '15 min', action: 'Leitura (sem tela)', tip: 'Livro físico ou Kindle. 15 minutos de leitura melhora 68% a qualidade do sono.' },
+    { time: '5 min', action: 'Intenção para amanhã', tip: 'Visualize como quer que amanhã seja. O cérebro trabalha enquanto você dorme.' },
+  ],
+  weekPlan: [
+    { day: 'Seg', emoji: '💪', focus: 'Movimento', desc: 'Foco no corpo. Qualquer exercício conta — dance, caminhe, treine.' },
+    { day: 'Ter', emoji: '🧠', focus: 'Mente', desc: 'Leitura, podcast educativo ou aprendizado de algo novo por 20 min.' },
+    { day: 'Qua', emoji: '💆‍♀️', focus: 'Autocuidado', desc: 'Máscara facial, banho especial, manicure caseira. Dia de se mimar.' },
+    { day: 'Qui', emoji: '📋', focus: 'Organização', desc: 'Organize ambiente, planeje semana seguinte, reveja seus objetivos.' },
+    { day: 'Sex', emoji: '✨', focus: 'Estilo', desc: 'Vista o que te faz sentir bonita. Cuide da aparência com intenção.' },
+    { day: 'Sáb', emoji: '🌿', focus: 'Descanso', desc: 'Sem culpa. Descansar é parte do glow up. Faça o que te renova.' },
+    { day: 'Dom', emoji: '🎯', focus: 'Reflexão', desc: 'Como foi a semana? O que mantém? O que muda? Planejamento gentil.' },
+  ],
+  affirmations: {
+    perdida: '"Eu não preciso ter tudo resolvido para começar. Cada passo me leva mais perto da mulher que quero ser."',
+    cansada: '"Meu descanso é sagrado. Me cuidar não é fraqueza — é inteligência."',
+    ansiosa: '"Estou segura. Estou bem. Escolho focar no que posso controlar e soltar o resto."',
+    motivada: '"Minha consistência é minha superpotência. Cada dia que eu apareço para mim mesma, eu vença."',
+    triste: '"Eu mereço amor — especialmente o meu próprio. Hoje eu me escolho."',
+  },
+  goalLabels: {
+    skincare: '💆‍♀️ Skincare',
+    corpo: '🏃‍♀️ Corpo',
+    mente: '🧠 Mente',
+    estilo: '👗 Estilo',
+    organizacao: '📋 Organização',
+    habitos: '✨ Hábitos',
+  },
+  skincareRoutine: {
+    oleosa: [
+      { step: '1', action: 'Gel de limpeza facial', tip: 'Limpe pela manhã e à noite. Pele oleosa precisa de limpeza suave, não agressiva.' },
+      { step: '2', action: 'Tônico adstringente sem álcool', tip: 'Equilibra o pH e reduz o brilho sem ressecar.' },
+      { step: '3', action: 'Hidratante oil-free', tip: 'Pele oleosa PRECISA de hidratação. Sem ela, produz ainda mais óleo.' },
+      { step: '4', action: 'Protetor solar com toque seco', tip: 'Todo dia, sem exceção. Prefira gel-creme ou fluido.' },
+    ],
+    seca: [
+      { step: '1', action: 'Leite ou creme de limpeza', tip: 'Evite espumas e géis — ressecam ainda mais a pele seca.' },
+      { step: '2', action: 'Sérum de ácido hialurônico', tip: 'Aplique no rosto ainda úmido para maximizar a hidratação.' },
+      { step: '3', action: 'Hidratante rico em ceramidas', tip: 'Ceramidas restauram a barreira da pele e prendem a hidratação.' },
+      { step: '4', action: 'Protetor solar cremoso', tip: 'Escolha formulações com hidratantes embutidos para pele seca.' },
+    ],
+    mista: [
+      { step: '1', action: 'Gel-espuma de limpeza suave', tip: 'Limpa sem agredir as áreas secas e controla as oleosas.' },
+      { step: '2', action: 'Tônico suave em todo o rosto', tip: 'Evite adstringentes fortes nas bochechas para não ressecar.' },
+      { step: '3', action: 'Hidratante leve em gel', tip: 'Textura gel equilibra: hidrata sem pesar nas áreas oleosas.' },
+      { step: '4', action: 'Protetor solar fluido FPS 50', tip: 'Essencial diariamente — protege e finaliza a rotina.' },
+    ],
+    sensivel: [
+      { step: '1', action: 'Água micelar ou limpador sem fragrância', tip: 'Ingredientes mínimos. Quanto mais simples, melhor para pele sensível.' },
+      { step: '2', action: 'Sérum com niacinamida ou centela', tip: 'Calmam vermelhidão e fortalecem a barreira da pele.' },
+      { step: '3', action: 'Hidratante hipoalergênico', tip: 'Evite parfum, álcool e essências. Teste novos produtos no pulso primeiro.' },
+      { step: '4', action: 'Protetor solar mineral com zinco', tip: 'Mais suave que o químico. Ideal para peles reativas.' },
+    ],
+    normal: [
+      { step: '1', action: 'Limpador suave (gel ou espuma leve)', tip: 'Pele normal não precisa de muito — manter é o segredo.' },
+      { step: '2', action: 'Vitamina C pela manhã', tip: 'Ilumina, protege do sol e previne manchas. Antioxidante poderoso.' },
+      { step: '3', action: 'Hidratante leve com FPS embutido', tip: 'Simplifica a rotina e garante proteção diária.' },
+      { step: '4', action: 'Retinol à noite (2-3x por semana)', tip: 'Renova a pele enquanto você dorme. Introduza aos poucos.' },
+    ],
+  },
+  sleepRoutine: {
+    pessimo: [
+      { time: '21h', action: 'Modo avião e tela azul off', tip: 'A luz azul bloqueia a melatonina. Esse é o passo mais impactante.' },
+      { time: '21h15', action: 'Banho morno com lavanda', tip: 'A queda de temperatura corporal após o banho induz o sono.' },
+      { time: '21h30', action: 'Respiração 4-7-8 por 5 min', tip: 'Inspira 4s, segura 7s, solta 8s. Ativa o sistema nervoso parassimpático.' },
+      { time: '21h45', action: 'Anote 3 pensamentos que te preocupam', tip: 'Externalizar as preocupações no papel libera a mente para dormir.' },
+      { time: '22h', action: 'Temperatura fresca no quarto', tip: 'Entre 18-21°C é o ideal para um sono profundo.' },
+    ],
+    irregular: [
+      { time: '21h30', action: 'Horário fixo para deitar — todo dia', tip: 'Consistência no horário é mais importante que a duração do sono.' },
+      { time: '21h40', action: 'Ritual de 10 min sempre igual', tip: 'O cérebro associa o ritual ao sono. Repita todas as noites.' },
+      { time: '21h50', action: 'Leitura física (sem tela) por 15 min', tip: 'Reduz o tempo para adormecer em até 68%.' },
+      { time: '22h', action: 'Sem álcool ou cafeína após 15h', tip: 'Cafeína tem meia-vida de 5-6h. Um café às 15h ainda afeta às 22h.' },
+    ],
+    ok: [
+      { time: '22h', action: 'Skincare noturno como ritual', tip: 'Transforme em meditação. Cada produto aplicado com presença total.' },
+      { time: '22h15', action: 'Diário de gratidão — 3 itens', tip: 'Terminar o dia em estado de gratidão melhora a qualidade do sono.' },
+      { time: '22h30', action: 'Sem verificar redes sociais na cama', tip: 'O scroll antes de dormir aumenta a ansiedade e atrasa o sono.' },
+      { time: '23h', action: 'Meditação guiada de 10 min', tip: 'Apps como Insight Timer têm meditações gratuitas específicas para sono.' },
+    ],
+    bom: [
+      { time: '22h', action: 'Otimize com um suplemento de magnésio', tip: 'Magnésio glicinato antes de dormir aprofunda o sono REM.' },
+      { time: '22h15', action: 'Registro do dia em 5 min', tip: 'O que foi bom? O que aprendi? O que amanhã pode ser melhor?' },
+      { time: '22h30', action: 'Leitura ou podcast educativo', tip: 'Alimente a mente enquanto o corpo descansa.' },
+    ],
+  },
+};
+
+// ============ LÓGICA ============
+let userData = {};
+
+function scrollToForm() {
+  document.getElementById('formSection').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function generateRoutine(e) {
+  e.preventDefault();
+  const name = document.getElementById('userName').value;
+  const mood = document.getElementById('userMood').value;
+  const wake = document.getElementById('wakeTime').value;
+  const skinType = document.getElementById('skinType').value;
+  const sleepQuality = document.getElementById('sleepQuality').value;
+  const goals = [];
+  ['g1','g2','g3','g4','g5','g6'].forEach(id => {
+    if (document.getElementById(id).checked) goals.push(document.getElementById(id).value);
+  });
+
+  if (!name || !mood || !wake || !skinType || !sleepQuality) return;
+
+  userData = { name, mood, wake, skinType, sleepQuality, goals };
+
+  // Show loading
+  const loading = document.getElementById('loadingScreen');
+  loading.classList.add('active');
+
+  // Animate steps
+  const steps = ['step1','step2','step3','step4'];
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      document.getElementById(id).classList.add('visible');
+    }, 600 * (i + 1));
+  });
+
+  // After delay, show result
+  setTimeout(() => {
+    loading.classList.remove('active');
+    buildResult();
+  }, 3200);
+}
+
+function buildResult() {
+  const { name, mood, wake, goals } = userData;
+
+  // Header name
+  document.getElementById('resultName').textContent = `✨ Rotina personalizada para ${name}`;
+  document.getElementById('shareUserName').textContent = name;
+
+  // Affirmation
+  const aff = routineData.affirmations[mood];
+  document.getElementById('affirmationText').textContent = aff;
+  document.getElementById('shareAffirmation').textContent = aff;
+
+  // Morning time label
+  const timeLabels = { '5h': 'Para quem acorda às 5h-6h', '7h': 'Para quem acorda às 6h-7h30', '8h': 'Para quem acorda às 7h30-9h', '10h': 'Para quem acorda às 9h+' };
+  document.getElementById('morningTime').textContent = timeLabels[wake];
+
+  // Morning routine
+  const morning = routineData.morning[mood] || routineData.morning.motivada;
+  const morningHTML = morning.map(item => `
+    <div class="routine-item">
+      <div class="routine-time">${item.time}</div>
+      <div class="routine-content">
+        <div class="routine-action">${item.action}</div>
+        <div class="routine-tip">${item.tip}</div>
+      </div>
+      <div class="routine-check" onclick="this.classList.toggle('checked'); this.textContent = this.classList.contains('checked') ? '✓' : ''"></div>
+    </div>
+  `).join('');
+  document.getElementById('morningRoutine').innerHTML = morningHTML;
+
+  // Evening routine — add goal-specific extras
+  let evening = [...routineData.evening];
+  if (goals.includes('skincare')) {
+    evening.splice(2, 0, { time: '5 min', action: 'Massagem facial com gua sha', tip: 'Melhora circulação, reduz inchaço e define o rosto ao longo do tempo.' });
+  }
+  const eveningHTML = evening.map(item => `
+    <div class="routine-item">
+      <div class="routine-time">${item.time}</div>
+      <div class="routine-content">
+        <div class="routine-action">${item.action}</div>
+        <div class="routine-tip">${item.tip}</div>
+      </div>
+      <div class="routine-check" onclick="this.classList.toggle('checked'); this.textContent = this.classList.contains('checked') ? '✓' : ''"></div>
+    </div>
+  `).join('');
+  document.getElementById('eveningRoutine').innerHTML = eveningHTML;
+
+  // Skincare personalizado
+  const skinData = routineData.skincareRoutine[userData.skinType] || routineData.skincareRoutine.normal;
+  const skinLabels = { oleosa:'Oleosa', seca:'Seca', mista:'Mista', sensivel:'Sensível', normal:'Normal' };
+  const skincareHTML = skinData.map(item => `
+    <div class="routine-item">
+      <div class="routine-time" style="color:#e57373">P${item.step}</div>
+      <div class="routine-content">
+        <div class="routine-action">${item.action}</div>
+        <div class="routine-tip">${item.tip}</div>
+      </div>
+      <div class="routine-check" onclick="this.classList.toggle('checked'); this.textContent = this.classList.contains('checked') ? '✓' : ''"></div>
+    </div>
+  `).join('');
+  const skincareCard = document.getElementById('skincareCard');
+  if (skincareCard) {
+    skincareCard.querySelector('.routine-card-desc').textContent = `Para pele ${skinLabels[userData.skinType] || 'sua'}`;
+    skincareCard.querySelector('.routine-card-body').innerHTML = skincareHTML;
+  }
+
+  // Sono personalizado
+  const sleepData = routineData.sleepRoutine[userData.sleepQuality] || routineData.sleepRoutine.ok;
+  const sleepLabels = { pessimo:'Foco total em qualidade de sono', irregular:'Criando consistência', ok:'Aprofundando o descanso', bom:'Otimizando seu sono' };
+  const sleepHTML = sleepData.map(item => `
+    <div class="routine-item">
+      <div class="routine-time">${item.time}</div>
+      <div class="routine-content">
+        <div class="routine-action">${item.action}</div>
+        <div class="routine-tip">${item.tip}</div>
+      </div>
+      <div class="routine-check" onclick="this.classList.toggle('checked'); this.textContent = this.classList.contains('checked') ? '✓' : ''"></div>
+    </div>
+  `).join('');
+  const sleepCard = document.getElementById('sleepCard');
+  if (sleepCard) {
+    sleepCard.querySelector('.routine-card-desc').textContent = sleepLabels[userData.sleepQuality] || 'Ritual noturno';
+    sleepCard.querySelector('.routine-card-body').innerHTML = sleepHTML;
+  }
+
+  // Week plan
+  const weekHTML = routineData.weekPlan.map((d, i) => `
+    <div style="padding:14px 0; border-bottom:1px solid rgba(244,167,185,0.15); display:flex; align-items:flex-start; gap:16px;">
+      <div style="background:${i===0?'linear-gradient(135deg,var(--rose),#e57373)':'var(--blush)'}; color:${i===0?'white':'var(--brown)'}; border-radius:12px; padding:10px 14px; text-align:center; min-width:52px; flex-shrink:0;">
+        <div style="font-size:10px; font-weight:600; letter-spacing:1px;">${d.day}</div>
+        <div style="font-size:20px; margin:4px 0;">${d.emoji}</div>
+      </div>
+      <div>
+        <div style="font-weight:600; font-size:14px; color:var(--brown); margin-bottom:3px;">${d.focus}</div>
+        <div style="font-size:13px; color:var(--soft); line-height:1.5;">${d.desc}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('weekPlan').innerHTML = weekHTML;
+
+  // Share goals
+  const goalsToShow = goals.length > 0 ? goals : ['habitos','mente'];
+  const goalsHTML = goalsToShow.map(g => `<span class="share-goal-tag">${routineData.goalLabels[g] || g}</span>`).join('');
+  document.getElementById('shareGoals').innerHTML = goalsHTML;
+
+  // Show result
+  document.getElementById('mainApp').classList.add('hidden');
+  document.getElementById('resultScreen').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============ AÇÕES ============
+async function downloadPDF() {
+  const btn = event.target;
+  btn.textContent = '⏳ Gerando PDF...';
+  btn.disabled = true;
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const { name, mood, wake, goals } = userData;
+    const pw = 210, margin = 20;
+
+    // Background rose tint
+    doc.setFillColor(255, 248, 245);
+    doc.rect(0, 0, pw, 297, 'F');
+
+    // Header
+    doc.setFillColor(252, 228, 236);
+    doc.rect(0, 0, pw, 50, 'F');
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(28);
+    doc.setTextColor(92, 61, 46);
+    doc.text('Glow Girl Up', margin, 22);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(13);
+    doc.setTextColor(155, 123, 107);
+    doc.text(`Rotina personalizada para ${name}`, margin, 34);
+
+    doc.setFontSize(10);
+    doc.text(`Gerado em ${new Date().toLocaleDateString('pt-BR')}`, margin, 44);
+
+    // Affirmation
+    let y = 64;
+    doc.setFillColor(244, 167, 185);
+    doc.roundedRect(margin, y, pw - margin*2, 24, 4, 4, 'F');
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(11);
+    doc.setTextColor(255, 255, 255);
+    const aff = routineData.affirmations[mood] || '';
+    const affLines = doc.splitTextToSize(aff, pw - margin*2 - 10);
+    doc.text(affLines, pw/2, y + 12, { align: 'center' });
+
+    // Morning
+    y += 36;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(92, 61, 46);
+    doc.text('🌅 Rotina Matinal', margin, y);
+    y += 8;
+
+    doc.setFillColor(248, 187, 208);
+    doc.rect(margin, y, pw - margin*2, 0.5, 'F');
+    y += 8;
+
+    const morning = routineData.morning[mood] || routineData.morning.motivada;
+    morning.forEach(item => {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(244, 167, 185);
+      doc.text(item.time, margin, y);
+      doc.setTextColor(45, 27, 18);
+      doc.text(item.action, margin + 22, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(158, 123, 107);
+      const tipLines = doc.splitTextToSize(item.tip, pw - margin*2 - 22);
+      doc.text(tipLines, margin + 22, y);
+      y += tipLines.length * 4 + 4;
+    });
+
+    // Evening
+    y += 6;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(92, 61, 46);
+    doc.text('🌙 Rotina Noturna', margin, y);
+    y += 8;
+
+    doc.setFillColor(225, 190, 231);
+    doc.rect(margin, y, pw - margin*2, 0.5, 'F');
+    y += 8;
+
+    routineData.evening.forEach(item => {
+      if (y > 270) { doc.addPage(); y = 20; }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(179, 136, 255);
+      doc.text(item.time, margin, y);
+      doc.setTextColor(45, 27, 18);
+      doc.text(item.action, margin + 22, y);
+      y += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(158, 123, 107);
+      const tipLines = doc.splitTextToSize(item.tip, pw - margin*2 - 22);
+      doc.text(tipLines, margin + 22, y);
+      y += tipLines.length * 4 + 4;
+    });
+
+    // New page for week plan
+    doc.addPage();
+    doc.setFillColor(255, 248, 245);
+    doc.rect(0, 0, pw, 297, 'F');
+
+    y = 20;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(92, 61, 46);
+    doc.text('📅 Plano de 7 Dias', margin, y);
+    y += 12;
+
+    routineData.weekPlan.forEach((d, i) => {
+      const bgColor = i === 0 ? [240, 98, 146] : [252, 228, 236];
+      const textColor = i === 0 ? [255,255,255] : [92,61,46];
+      doc.setFillColor(...bgColor);
+      doc.roundedRect(margin, y, pw - margin*2, 20, 3, 3, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(...textColor);
+      doc.text(`${d.day} — ${d.emoji} ${d.focus}`, margin + 6, y + 8);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(i===0?240:158, i===0?180:123, i===0?200:107);
+      doc.text(d.desc, margin + 6, y + 15);
+      y += 26;
+    });
+
+    // Footer
+    doc.setFontSize(9);
+    doc.setTextColor(158, 123, 107);
+    doc.text('Glow Girl Up • @glowgirlup.oficial • Sua transformação começa hoje ✨', pw/2, 288, { align: 'center' });
+
+    doc.save(`glow-up-rotina-${name.toLowerCase().replace(' ','-')}.pdf`);
+    btn.textContent = '✅ PDF baixado!';
+    setTimeout(() => { btn.textContent = '📄 Baixar minha rotina em PDF'; btn.disabled = false; }, 3000);
+  } catch (err) {
+    btn.textContent = '📄 Baixar minha rotina em PDF';
+    btn.disabled = false;
+    alert('Erro ao gerar PDF. Tente salvar como imagem!');
+  }
+}
+
+async function saveAsImage() {
+  const btn = event.target;
+  btn.textContent = '⏳ Gerando imagem...';
+  btn.disabled = true;
+  try {
+    const card = document.getElementById('shareCard');
+    const canvas = await html2canvas(card, { scale: 2, backgroundColor: null, useCORS: true });
+    const link = document.createElement('a');
+    link.download = `glow-up-${userData.name?.toLowerCase() || 'rotina'}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.textContent = '✅ Imagem salva!';
+    setTimeout(() => { btn.textContent = '📸 Salvar como imagem'; btn.disabled = false; }, 3000);
+  } catch(err) {
+    btn.textContent = '📸 Salvar como imagem';
+    btn.disabled = false;
+  }
+}
+
+function shareInstagram() {
+  const text = encodeURIComponent(`✨ Acabei de criar minha rotina Glow Girl Up personalizada com IA!\n\n${routineData.affirmations[userData.mood] || ''}\n\nCrie a sua grátis → instagram.com/glowgirlup.oficial\n\n#GlowGirlUp #RotinaFeminina #GlowUp #Autocuidado`);
+  // Copy to clipboard + open Instagram
+  navigator.clipboard?.writeText(decodeURIComponent(text)).catch(()=>{});
+  alert('📋 Legenda copiada! Agora salve a imagem e cole no Instagram Stories ou Feed.');
+}
+
+function resetApp() {
+  document.getElementById('resultScreen').classList.remove('active');
+  document.getElementById('mainApp').classList.remove('hidden');
+  document.getElementById('glowForm').reset();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
