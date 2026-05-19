@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Glow Girl Up Premium — Bem-vinda! 💕</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#FF6B9D" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Glow Girl Up" />
+<link rel="apple-touch-icon" href="/icon.svg" />
+<link rel="icon" type="image/svg+xml" href="/icon.svg" />
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -371,6 +379,17 @@ footer a { color: var(--pink); text-decoration: none; }
 </style>
 </head>
 <body>
+
+<!-- ── BANNER DE INSTALAÇÃO (Android) ── -->
+<div id="install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:999;background:linear-gradient(135deg,#1a1030,#2d1060);border-top:1px solid rgba(255,107,157,0.3);padding:14px 16px;align-items:center;gap:12px;box-shadow:0 -8px 30px rgba(0,0,0,0.4);">
+  <span style="font-size:28px;flex-shrink:0;">💕</span>
+  <div style="flex:1;min-width:0;">
+    <div style="font-size:14px;font-weight:700;color:#fff;">Salvar como app</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.6);">Acesse o Glow Girl Up Premium direto da sua tela inicial</div>
+  </div>
+  <button id="btn-install" style="padding:10px 18px;background:linear-gradient(135deg,#FF6B9D,#8B5CF6);border:none;border-radius:50px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;">Instalar</button>
+  <button id="banner-close" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;padding:4px;flex-shrink:0;">✕</button>
+</div>
 
 <!-- ── HERO ── -->
 <div class="hero">
@@ -858,6 +877,45 @@ function scrollTo(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// Registra Service Worker (PWA)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
+
+// Prompt de instalação no Android
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Mostra banner após 3 segundos
+  setTimeout(() => {
+    const banner = document.getElementById('install-banner');
+    if (banner) banner.style.display = 'flex';
+  }, 3000);
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btn-install');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          document.getElementById('install-banner').style.display = 'none';
+        });
+      }
+    });
+  }
+  const close = document.getElementById('banner-close');
+  if (close) {
+    close.addEventListener('click', () => {
+      document.getElementById('install-banner').style.display = 'none';
+    });
+  }
+});
 </script>
 </body>
 </html>
