@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Glow Girl Up Premium — Bem-vinda! 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --pink:       #FF6B9D;
+  --pink-deep:  #C44B97;
+  --purple:     #8B5CF6;
+  --purple-deep:#5B21B6;
+  --bg:         #0f0a1e;
+  --surface:    #1a1030;
+  --surface2:   #221540;
+  --border:     rgba(255,107,157,0.15);
+  --text:       #F0EAF8;
+  --text-mid:   #B09EC8;
+  --text-dim:   #6B5A80;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #1a0a2e 0%, #2d1060 50%, #1a0a2e 100%);
+  padding: 60px 20px 50px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; left: 50%; transform: translateX(-50%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,107,157,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,107,157,0.12);
+  border: 1px solid rgba(255,107,157,0.3);
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pink);
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: clamp(28px, 7vw, 42px);
+  font-weight: 900;
+  line-height: 1.15;
+  background: linear-gradient(135deg, #fff 30%, #FF6B9D 70%, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+.hero p {
+  font-size: 16px;
+  color: var(--text-mid);
+  max-width: 460px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+.hero-emoji {
+  font-size: 64px;
+  margin-bottom: 20px;
+  display: block;
+}
+.welcome-box {
+  background: rgba(255,107,157,0.08);
+  border: 1px solid rgba(255,107,157,0.2);
+  border-radius: 16px;
+  padding: 20px 24px;
+  max-width: 460px;
+  margin: 0 auto;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-mid);
+}
+.welcome-box strong { color: var(--pink); }
+
+/* ── SECTION ── */
+section {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin-bottom: 8px;
+}
+.section-heading {
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 800;
+  margin-bottom: 24px;
+  line-height: 1.25;
+}
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 40px auto;
+  max-width: 640px;
+}
+
+/* ── MÓDULOS ── */
+.modulos { padding: 40px 16px; }
+.modulo-grid {
+  display: grid;
+  gap: 14px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.modulo-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+.modulo-card:hover { border-color: rgba(255,107,157,0.4); }
+.modulo-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,107,157,0.08);
+  border-radius: 12px;
+}
+.modulo-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.modulo-info p { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
+.modulo-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(139,92,246,0.15);
+  color: #a78bfa;
+  margin-top: 8px;
+  display: inline-block;
+}
+
+/* ── ACCORDION (conteúdo expandível) ── */
+.acc-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.acc-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  gap: 12px;
+}
+.acc-header span:first-child { flex: 1; }
+.acc-arrow {
+  font-size: 12px;
+  transition: transform 0.25s;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.acc-item.open .acc-arrow { transform: rotate(180deg); }
+.acc-body {
+  display: none;
+  padding: 0 20px 20px;
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+.acc-item.open .acc-body { display: block; }
+.acc-body ul { padding-left: 18px; }
+.acc-body li { margin-bottom: 6px; }
+.acc-body .step {
+  background: var(--surface2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--pink);
+}
+.acc-body .step strong { color: var(--text); font-size: 13px; display: block; margin-bottom: 2px; }
+.acc-body .step span { font-size: 13px; }
+
+/* ── ROTINA 21 DIAS ── */
+.dias-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+.dia-box {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+}
+.dia-box.semana1 { border-color: rgba(255,107,157,0.3); color: var(--pink); }
+.dia-box.semana2 { border-color: rgba(139,92,246,0.3); color: #a78bfa; }
+.dia-box.semana3 { border-color: rgba(34,197,94,0.3); color: #4ade80; }
+.dia-box .dia-num { font-size: 15px; }
+
+/* ── CHECKLIST ── */
+.check-group { margin-bottom: 20px; }
+.check-title { font-size: 13px; font-weight: 700; color: var(--pink); margin-bottom: 10px; }
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+  user-select: none;
+}
+.check-item:hover { background: rgba(255,107,157,0.08); }
+.check-item input[type=checkbox] {
+  width: 18px; height: 18px;
+  accent-color: var(--pink);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.check-item.done { opacity: 0.5; text-decoration: line-through; }
+
+/* ── SKINCARE GUIDE ── */
+.skin-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.skin-tab {
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--surface2);
+  color: var(--text-mid);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.skin-tab.active {
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  color: white;
+  border-color: transparent;
+}
+.skin-panel { display: none; }
+.skin-panel.active { display: block; }
+.skin-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: var(--surface2);
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+.skin-step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink), var(--purple));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+  flex-shrink: 0;
+}
+.skin-step-info strong { font-size: 13px; display: block; margin-bottom: 2px; }
+.skin-step-info span { font-size: 12px; color: var(--text-mid); }
+
+/* ── RECEITAS ── */
+.receita-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 12px;
+}
+.receita-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.receita-card p { font-size: 13px; color: var(--text-mid); line-height: 1.6; }
+.receita-tag {
+  font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+  background: rgba(255,107,157,0.12); color: var(--pink);
+  display: inline-block; margin-bottom: 10px;
+}
+
+/* ── AFIRMAÇÕES ── */
+.afirmacao {
+  background: linear-gradient(135deg, rgba(255,107,157,0.08), rgba(139,92,246,0.08));
+  border: 1px solid rgba(255,107,157,0.15);
+  border-radius: 14px;
+  padding: 18px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  text-align: center;
+  color: var(--text);
+}
+.afirmacao em { color: var(--pink); font-style: normal; }
+
+/* ── ALIMENTAÇÃO ── */
+.alim-card {
+  background: var(--surface);
+  border: 1px solid rgba(34,197,94,0.15);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.alim-card h4 { font-size: 14px; font-weight: 700; color: #4ade80; margin-bottom: 8px; }
+.alim-card ul { padding-left: 16px; font-size: 13px; color: var(--text-mid); line-height: 1.8; }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 13px;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+footer a { color: var(--pink); text-decoration: none; }
+
+/* ── UTILITY ── */
+.mt { margin-top: 32px; }
+.mt-sm { margin-top: 20px; }
+.pb { padding-bottom: 40px; }
+.tag-novo {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+  background: rgba(255,107,157,0.2); color: var(--pink);
+  margin-left: 8px; vertical-align: middle;
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-badge">✨ Acesso Premium Confirmado</div>
+  <span class="hero-emoji">💕</span>
+  <h1>Bem-vinda ao<br>Glow Girl Up Premium</h1>
+  <p>Seu acesso completo está aqui. Tudo que você precisa para transformar sua rotina — de verdade.</p>
+  <div class="welcome-box">
+    Guarda o link desta página nos seus favoritos.<br>
+    <strong>Este é o seu acesso exclusivo.</strong> Não compartilhe.
+  </div>
+</div>
+
+<!-- ── O QUE VOCÊ TEM ACESSO ── -->
+<div class="modulos mt pb">
+  <section>
+    <p class="section-title">Seus módulos</p>
+    <h2 class="section-heading">Tudo que está incluído 🎁</h2>
+  </section>
+  <div class="modulo-grid" style="max-width:640px;margin:0 auto;padding:0 16px;">
+    <div class="modulo-card" onclick="scrollTo('m1')">
+      <div class="modulo-icon">📅</div>
+      <div class="modulo-info">
+        <h3>Rotina Glow de 21 Dias</h3>
+        <p>Plano diário completo — manhã, tarde e noite — para criar hábitos reais em 3 semanas.</p>
+        <span class="modulo-tag">Planner interativo</span>
+      </div>
+    </div>
+    <div class="modulo-card" onclick="scrollTo('m2')">
+      <div class="modulo-icon">✅</div>
+      <div class="modulo-info">
+        <h3>Checklist Diário de Hábitos</h3>
+        <p>Marque seus hábitos diários direto aqui — skin, corpo, mente e sono.</p>
+        <span class="modulo-tag">Interativo</span>
+      </div>
+    </div>
+    <div class="modulo-card" onclick="scrollTo('m3')">
+      <div class="modulo-icon">🌸</div>
+      <div class="modulo-info">
+        <h3>Guia de Skincare Completo</h3>
+        <p>Rotina passo a passo personalizada por tipo de pele. Seca, oleosa, mista e sensível.</p>
+        <span class="modulo-tag">4 tipos de pele</span>
+      </div>
+    </div>
+    <div class="modulo-card" onclick="scrollTo('m4')">
+      <div class="modulo-icon">🧴</div>
+      <div class="modulo-info">
+        <h3>Receitas de Skincare Natural</h3>
+        <p>Máscaras, tônicos e hidratantes feitos em casa com ingredientes simples.</p>
+        <span class="modulo-tag">6 receitas</span>
+      </div>
+    </div>
+    <div class="modulo-card" onclick="scrollTo('m5')">
+      <div class="modulo-icon">🥗</div>
+      <div class="modulo-info">
+        <h3>Alimentação Anti-Inflamatória</h3>
+        <p>O que comer (e evitar) para a pele brilhar. Plano semanal simples e prático.</p>
+        <span class="modulo-tag">Guia + cardápio</span>
+      </div>
+    </div>
+    <div class="modulo-card" onclick="scrollTo('m6')">
+      <div class="modulo-icon">💜</div>
+      <div class="modulo-info">
+        <h3>Afirmações & Mantras Diários</h3>
+        <p>21 afirmações poderosas — uma por dia — para reprogramar sua mentalidade.</p>
+        <span class="modulo-tag">21 dias</span>
+      </div>
+    </div>
+    <div class="modulo-card" onclick="scrollTo('m7')">
+      <div class="modulo-icon">🌙</div>
+      <div class="modulo-info">
+        <h3>Guia de Sono & Recuperação</h3>
+        <p>Protocolo noturno completo para dormir bem e acordar renovada todo dia.</p>
+        <span class="modulo-tag">Protocolo completo</span>
+      </div>
+    </div>
+    <div class="modulo-card">
+      <div class="modulo-icon">📱</div>
+      <div class="modulo-info">
+        <h3>App Glow Girl Up</h3>
+        <p>Acesso completo ao app com sua rotina personalizada por IA.</p>
+        <a href="https://glow-girl-up.vercel.app" target="_blank" style="color:var(--pink);font-size:13px;font-weight:600;">Abrir app →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── M1: ROTINA 21 DIAS ── -->
+<section id="m1" class="mt pb">
+  <p class="section-title">Módulo 1</p>
+  <h2 class="section-heading">📅 Rotina Glow de 21 Dias</h2>
+  <p style="font-size:14px;color:var(--text-mid);margin-bottom:24px;line-height:1.6;">
+    21 dias para criar hábitos que ficam para sempre. Cada semana tem um foco diferente: <strong style="color:var(--pink)">Semana 1 — Começar</strong>, <strong style="color:#a78bfa">Semana 2 — Aprofundar</strong>, <strong style="color:#4ade80">Semana 3 — Consolidar</strong>.
+  </p>
+
+  <div class="dias-grid">
+    <div class="dia-box semana1"><span class="dia-num">1</span><span>💧</span></div>
+    <div class="dia-box semana1"><span class="dia-num">2</span><span>🌸</span></div>
+    <div class="dia-box semana1"><span class="dia-num">3</span><span>🌅</span></div>
+    <div class="dia-box semana1"><span class="dia-num">4</span><span>💤</span></div>
+    <div class="dia-box semana1"><span class="dia-num">5</span><span>🥗</span></div>
+    <div class="dia-box semana1"><span class="dia-num">6</span><span>🏃</span></div>
+    <div class="dia-box semana1"><span class="dia-num">7</span><span>🎯</span></div>
+    <div class="dia-box semana2"><span class="dia-num">8</span><span>✨</span></div>
+    <div class="dia-box semana2"><span class="dia-num">9</span><span>🧘</span></div>
+    <div class="dia-box semana2"><span class="dia-num">10</span><span>📖</span></div>
+    <div class="dia-box semana2"><span class="dia-num">11</span><span>💪</span></div>
+    <div class="dia-box semana2"><span class="dia-num">12</span><span>🌿</span></div>
+    <div class="dia-box semana2"><span class="dia-num">13</span><span>🧴</span></div>
+    <div class="dia-box semana2"><span class="dia-num">14</span><span>🔥</span></div>
+    <div class="dia-box semana3"><span class="dia-num">15</span><span>⚡</span></div>
+    <div class="dia-box semana3"><span class="dia-num">16</span><span>🌟</span></div>
+    <div class="dia-box semana3"><span class="dia-num">17</span><span>🎶</span></div>
+    <div class="dia-box semana3"><span class="dia-num">18</span><span>💕</span></div>
+    <div class="dia-box semana3"><span class="dia-num">19</span><span>🏆</span></div>
+    <div class="dia-box semana3"><span class="dia-num">20</span><span>🌈</span></div>
+    <div class="dia-box semana3"><span class="dia-num">21</span><span>👑</span></div>
+  </div>
+
+  <div class="acc-item mt-sm">
+    <div class="acc-header" onclick="toggleAcc(this)"><span>🌅 SEMANA 1 — Começar (Dias 1–7)</span><span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <div class="step"><strong>Dia 1 — Hidratação ativa 💧</strong><span>Manhã: 500ml de água ao acordar antes de qualquer coisa. Noite: creme hidratante no rosto e mãos.</span></div>
+      <div class="step"><strong>Dia 2 — Skincare básico 🌸</strong><span>Manhã: limpeza + hidratante + protetor solar. Noite: limpeza dupla + sérum ou óleo facial.</span></div>
+      <div class="step"><strong>Dia 3 — 1 intenção do dia 🌅</strong><span>Antes de pegar o celular: escreva 1 frase sobre o que você quer sentir hoje.</span></div>
+      <div class="step"><strong>Dia 4 — Sono com protocolo 💤</strong><span>Celular off 30min antes de dormir. Lavar o rosto, passar creme e deitar cedo.</span></div>
+      <div class="step"><strong>Dia 5 — Alimentação consciente 🥗</strong><span>1 refeição do dia com mais cor (fruta, salada ou legumes). Reduza 1 processado hoje.</span></div>
+      <div class="step"><strong>Dia 6 — Movimento 🏃</strong><span>10 minutos de movimento pela manhã — caminhada, dança, alongamento. Sem desculpa.</span></div>
+      <div class="step"><strong>Dia 7 — Revisão da semana 🎯</strong><span>O que funcionou? O que foi difícil? Anote 3 conquistas, por menores que sejam.</span></div>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-header" onclick="toggleAcc(this)"><span>💜 SEMANA 2 — Aprofundar (Dias 8–14)</span><span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <div class="step"><strong>Dia 8 — Esfoliação suave ✨</strong><span>Uma vez por semana: esfoliante facial suave. Pele renovada = produtos penetram melhor.</span></div>
+      <div class="step"><strong>Dia 9 — Meditação 5 min 🧘</strong><span>Respire: 4s inspira, 4s segura, 4s expira. Repita 5x ao acordar. Muda o dia todo.</span></div>
+      <div class="step"><strong>Dia 10 — Leitura ou podcast 📖</strong><span>20 minutos de conteúdo que te inspira. Troque scroll por aprendizado uma vez por dia.</span></div>
+      <div class="step"><strong>Dia 11 — Força e postura 💪</strong><span>15 min de exercício: abdômen, agachamento, flexão. Sem academia, só você e o chão.</span></div>
+      <div class="step"><strong>Dia 12 — Chá anti-inflamatório 🌿</strong><span>Troque 1 café por chá de gengibre + limão ou hibisco. Pele agradece em 7 dias.</span></div>
+      <div class="step"><strong>Dia 13 — Máscara facial 🧴</strong><span>Use uma das receitas naturais do Módulo 4. Separe 15 min só para você.</span></div>
+      <div class="step"><strong>Dia 14 — Digitaldetox 1h 🔥</strong><span>1 hora sem celular à noite. Leia, desenhe, tome banho demorado. Recarregue de verdade.</span></div>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-header" onclick="toggleAcc(this)"><span>🏆 SEMANA 3 — Consolidar (Dias 15–21)</span><span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <div class="step"><strong>Dias 15–17 — Combine tudo ⚡</strong><span>Manhã completa: água + movimento + skincare + intenção. Tarde: alimentação. Noite: protocolo de sono.</span></div>
+      <div class="step"><strong>Dias 18–19 — Intensidade 💕</strong><span>Adicione 1 novo hábito pequeno: vitamina C oral, colágeno, ou 10min a mais de sono.</span></div>
+      <div class="step"><strong>Dia 20 — Foto do antes e depois 🌈</strong><span>Compare como você estava no dia 1 vs agora. Pele, energia, disposição, humor.</span></div>
+      <div class="step"><strong>Dia 21 — Você virou outra pessoa 👑</strong><span>Celebre. Você criou hábitos reais em 21 dias. Agora é manutenção — é quem você é.</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── M2: CHECKLIST ── -->
+<section id="m2" class="mt pb">
+  <p class="section-title">Módulo 2</p>
+  <h2 class="section-heading">✅ Checklist Diário de Hábitos</h2>
+  <p style="font-size:14px;color:var(--text-mid);margin-bottom:24px;line-height:1.6;">
+    Marque seus hábitos de hoje. A página salva automaticamente enquanto você navega.
+  </p>
+
+  <div class="check-group">
+    <div class="check-title">☀️ Manhã</div>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Bebeu 500ml de água ao acordar</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Fez a skin routine matinal</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Aplicou protetor solar</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Definiu 1 intenção para o dia</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Fez 10 minutos de movimento</label>
+  </div>
+
+  <div class="check-group">
+    <div class="check-title">🌤 Tarde</div>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Tomou 1,5L de água no total</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Comeu pelo menos 1 refeição colorida</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Evitou pelo menos 1 ultraprocessado</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Fez uma pausa de 5 min do celular</label>
+  </div>
+
+  <div class="check-group">
+    <div class="check-title">🌙 Noite</div>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Limpou o rosto antes de dormir</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Aplicou creme ou sérum noturno</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Largou o celular 30min antes de dormir</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Registrou 1 gratidão do dia</label>
+    <label class="check-item"><input type="checkbox" onchange="markCheck(this)"> Dormiu no horário planejado</label>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── M3: SKINCARE GUIDE ── -->
+<section id="m3" class="mt pb">
+  <p class="section-title">Módulo 3</p>
+  <h2 class="section-heading">🌸 Guia de Skincare Completo</h2>
+  <p style="font-size:14px;color:var(--text-mid);margin-bottom:20px;">Selecione seu tipo de pele:</p>
+
+  <div class="skin-tabs">
+    <button class="skin-tab active" onclick="setSkin('oleosa',this)">Oleosa</button>
+    <button class="skin-tab" onclick="setSkin('seca',this)">Seca</button>
+    <button class="skin-tab" onclick="setSkin('mista',this)">Mista</button>
+    <button class="skin-tab" onclick="setSkin('sensivel',this)">Sensível</button>
+  </div>
+
+  <div id="skin-oleosa" class="skin-panel active">
+    <p style="font-size:13px;color:var(--text-mid);margin-bottom:14px;">☀️ <strong>Rotina Manhã — Pele Oleosa</strong></p>
+    <div class="skin-step"><div class="skin-step-num">1</div><div class="skin-step-info"><strong>Limpeza suave (gel ou espuma)</strong><span>Remove excesso de oleosidade sem ressecar. Evite sabonetes agressivos.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">2</div><div class="skin-step-info"><strong>Tônico adstringente (opcional)</strong><span>Fecha poros e equilibra o pH. Ingredientes: ácido salicílico ou niacinamida.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">3</div><div class="skin-step-info"><strong>Hidratante oil-free (gel)</strong><span>Pele oleosa precisa de hidratação! Use textura leve — gel ou fluido.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">4</div><div class="skin-step-info"><strong>Protetor solar FPS 30+ oil-free</strong><span>Obrigatório! Escolha versão oil control ou com cor. Previne envelhecimento e manchas.</span></div></div>
+    <p style="font-size:13px;color:var(--text-mid);margin:16px 0 14px;">🌙 <strong>Rotina Noite — Pele Oleosa</strong></p>
+    <div class="skin-step"><div class="skin-step-num">1</div><div class="skin-step-info"><strong>Demaquilante bifásico ou micelar</strong><span>Primeiro passo: remove maquiagem, protetor e poluição do dia.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">2</div><div class="skin-step-info"><strong>Limpeza com espuma ou gel</strong><span>Segunda limpeza para desobstruir os poros completamente.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">3</div><div class="skin-step-info"><strong>Sérum com niacinamida ou retinol (noite)</strong><span>Regula oleosidade, fecha poros e renova a pele enquanto você dorme.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">4</div><div class="skin-step-info"><strong>Hidratante leve noturno</strong><span>Gel-creme ou loção. Finalize selando a hidratação.</span></div></div>
+  </div>
+
+  <div id="skin-seca" class="skin-panel">
+    <p style="font-size:13px;color:var(--text-mid);margin-bottom:14px;">☀️ <strong>Rotina Manhã — Pele Seca</strong></p>
+    <div class="skin-step"><div class="skin-step-num">1</div><div class="skin-step-info"><strong>Limpeza cremosa suave</strong><span>Evite espumas. Limpador em creme ou leite mantém a barreira da pele.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">2</div><div class="skin-step-info"><strong>Sérum de ácido hialurônico</strong><span>Aplique no rosto levemente úmido para máxima absorção. Hidratação profunda.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">3</div><div class="skin-step-info"><strong>Hidratante rico (creme ou loção densa)</strong><span>Sele a hidratação com textura mais encorpada. Ingredientes: ceramidas, manteiga de karité.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">4</div><div class="skin-step-info"><strong>Protetor solar hidratante FPS 30+</strong><span>Escolha versão com ação hidratante. Evite fórmulas secativas.</span></div></div>
+    <p style="font-size:13px;color:var(--text-mid);margin:16px 0 14px;">🌙 <strong>Rotina Noite — Pele Seca</strong></p>
+    <div class="skin-step"><div class="skin-step-num">1</div><div class="skin-step-info"><strong>Demaquilante em óleo ou bálsamo</strong><span>Dissolve tudo sem agredir. Deixa um véu nutritivo na pele.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">2</div><div class="skin-step-info"><strong>Limpeza cremosa (segundo passo)</strong><span>Suave, sem ressecar. Nunca álcool ou sabonete de barra.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">3</div><div class="skin-step-info"><strong>Óleo facial ou sérum nutritivo</strong><span>Rosa mosqueta, argan ou esqualano. Passa antes do creme para travar a nutrição.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">4</div><div class="skin-step-info"><strong>Creme noturno rico</strong><span>Pele seca precisa de nutrição intensa à noite. Ingredientes: ceramidas, colesterol, manteiga.</span></div></div>
+  </div>
+
+  <div id="skin-mista" class="skin-panel">
+    <p style="font-size:13px;color:var(--text-mid);margin-bottom:14px;">☀️ <strong>Rotina Manhã — Pele Mista</strong></p>
+    <div class="skin-step"><div class="skin-step-num">1</div><div class="skin-step-info"><strong>Gel de limpeza suave</strong><span>Limpa sem ressecar as bochechas e sem deixar a zona T brilhando.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">2</div><div class="skin-step-info"><strong>Hidratante balanceador (loção leve)</strong><span>Hidrata as áreas secas sem pesar a zona T. Textura fluida é ideal.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">3</div><div class="skin-step-info"><strong>Protetor solar FPS 30+ textura leve</strong><span>Fluido ou gel-creme. Não agrega mais oleosidade à zona T.</span></div></div>
+    <p style="font-size:13px;color:var(--text-mid);margin:16px 0 14px;">🌙 <strong>Rotina Noite — Pele Mista</strong></p>
+    <div class="skin-step"><div class="skin-step-num">1</div><div class="skin-step-info"><strong>Demaquilante bifásico</strong><span>Remove tudo antes da limpeza. Não pule esse passo mesmo sem maquiagem.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">2</div><div class="skin-step-info"><strong>Gel de limpeza</strong><span>Limpeza completa sem agredir as áreas secas.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">3</div><div class="skin-step-info"><strong>Sérum multitarefa (niacinamida)</strong><span>Regula oleosidade na zona T e hidrata as bochechas ao mesmo tempo.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">4</div><div class="skin-step-info"><strong>Gel-creme noturno</strong><span>Leve o suficiente para a zona T, hidratante o suficiente para as bochechas.</span></div></div>
+  </div>
+
+  <div id="skin-sensivel" class="skin-panel">
+    <p style="font-size:13px;color:var(--text-mid);margin-bottom:14px;">☀️ <strong>Rotina Manhã — Pele Sensível</strong></p>
+    <div class="skin-step"><div class="skin-step-num">1</div><div class="skin-step-info"><strong>Limpador micelar ou água termal</strong><span>De manhã, pode ser só água micelar. Pele sensível não precisa de limpeza pesada pela manhã.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">2</div><div class="skin-step-info"><strong>Sérum de centella asiática ou alantoína</strong><span>Acalma, reduz vermelhidão e fortalece a barreira. Sem perfume, sem álcool.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">3</div><div class="skin-step-info"><strong>Hidratante hipoalergênico</strong><span>Sem fragrância, sem corante. Ingredientes: ceramidas, pantenol, glicerina.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">4</div><div class="skin-step-info"><strong>Protetor mineral FPS 30+ (tióxido de zinco)</strong><span>Protetor mineral é mais tolerado pela pele sensível. Evite químicos irritantes.</span></div></div>
+    <p style="font-size:13px;color:var(--text-mid);margin:16px 0 14px;">🌙 <strong>Rotina Noite — Pele Sensível</strong></p>
+    <div class="skin-step"><div class="skin-step-num">1</div><div class="skin-step-info"><strong>Leite de limpeza ou micelar</strong><span>Delicado, sem esfregar. Pele sensível agradece gentileza.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">2</div><div class="skin-step-info"><strong>Sérum calmante (sem ácidos)</strong><span>Centella, niacinamida baixa concentração (2-5%), aloé vera. Nada irritante à noite.</span></div></div>
+    <div class="skin-step"><div class="skin-step-num">3</div><div class="skin-step-info"><strong>Barreira noturna (creme com ceramidas)</strong><span>Repõe a barreira cutânea durante o sono. Fundamental para pele sensível.</span></div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── M4: RECEITAS NATURAIS ── -->
+<section id="m4" class="mt pb">
+  <p class="section-title">Módulo 4</p>
+  <h2 class="section-heading">🧴 Receitas de Skincare Natural</h2>
+
+  <div class="receita-card">
+    <span class="receita-tag">Todos os tipos</span>
+    <h4>🍯 Máscara de Mel + Aveia</h4>
+    <p><strong>Ingredientes:</strong> 1 colher de mel puro + 2 colheres de aveia fina + algumas gotas de água.<br>
+    <strong>Como usar:</strong> Misture até virar pasta, aplique no rosto limpo por 15 minutos, enxágue com água fria.<br>
+    <strong>Benefício:</strong> Hidratação profunda, efeito calmante e anti-inflamatório. Use 1x por semana.</p>
+  </div>
+
+  <div class="receita-card">
+    <span class="receita-tag">Pele oleosa e mista</span>
+    <h4>🍋 Tônico de Pepino + Chá Verde</h4>
+    <p><strong>Ingredientes:</strong> ½ pepino liquidificado + ½ xícara de chá verde frio + 3 gotas de óleo de tea tree.<br>
+    <strong>Como usar:</strong> Coe, guarde na geladeira por até 5 dias. Passe com algodão após a limpeza.<br>
+    <strong>Benefício:</strong> Fecha poros, controla oleosidade e trata acne de forma suave.</p>
+  </div>
+
+  <div class="receita-card">
+    <span class="receita-tag">Pele seca e sensível</span>
+    <h4>🌹 Máscara de Rosa Mosqueta + Mel</h4>
+    <p><strong>Ingredientes:</strong> 5 gotas de óleo de rosa mosqueta + 1 colher de mel + 1 colher de iogurte natural.<br>
+    <strong>Como usar:</strong> Misture, aplique por 20 minutos no rosto limpo, retire com algodão úmido.<br>
+    <strong>Benefício:</strong> Regenera, clareia manchas e hidrata intensamente. Use 2x por semana.</p>
+  </div>
+
+  <div class="receita-card">
+    <span class="receita-tag">Anti-manchas</span>
+    <h4>☀️ Esfoliante de Açúcar + Limão</h4>
+    <p><strong>Ingredientes:</strong> 2 colheres de açúcar mascavo + suco de ½ limão + 1 colher de óleo de coco.<br>
+    <strong>Como usar:</strong> Misture, massageie suavemente no rosto úmido por 1 minuto, enxágue. Use 1x por semana à noite.<br>
+    <strong>Atenção:</strong> Use protetor solar obrigatoriamente no dia seguinte.</p>
+  </div>
+
+  <div class="receita-card">
+    <span class="receita-tag">Olheiras</span>
+    <h4>🥒 Compressas de Pepino + Chá Preto</h4>
+    <p><strong>Ingredientes:</strong> Rodelas de pepino gelado OU saquinhos de chá preto gelado.<br>
+    <strong>Como usar:</strong> Deixe na geladeira por 10 minutos, aplique nos olhos fechados por 10-15 minutos.<br>
+    <strong>Benefício:</strong> Reduz inchaço e olheiras. Ideal para usar toda manhã depois de acordar.</p>
+  </div>
+
+  <div class="receita-card">
+    <span class="receita-tag">Lábios</span>
+    <h4>🍓 Esfoliante de Açúcar + Mel para Lábios</h4>
+    <p><strong>Ingredientes:</strong> 1 colher de açúcar + ½ colher de mel.<br>
+    <strong>Como usar:</strong> Massageie nos lábios por 1 minuto com o dedo ou escova de dente macia, enxágue.<br>
+    <strong>Benefício:</strong> Remove células mortas, deixa lábios macios e rosados. Use 2x por semana.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── M5: ALIMENTAÇÃO ── -->
+<section id="m5" class="mt pb">
+  <p class="section-title">Módulo 5</p>
+  <h2 class="section-heading">🥗 Alimentação Anti-Inflamatória</h2>
+  <p style="font-size:14px;color:var(--text-mid);margin-bottom:20px;line-height:1.6;">
+    O que você come aparece na sua pele em 2 semanas. Pequenas trocas geram grandes resultados.
+  </p>
+
+  <div class="alim-card">
+    <h4>✅ Coma mais disso</h4>
+    <ul>
+      <li>Frutas vermelhas (morango, mirtilo, amora) — antioxidantes poderosos</li>
+      <li>Abacate — gordura boa que hidrata a pele de dentro para fora</li>
+      <li>Salmão, sardinha e atum — ômega-3 anti-inflamatório</li>
+      <li>Brócolis, espinafre e couve — vitamina C e K para brilho e firmeza</li>
+      <li>Cenoura e batata-doce — betacaroteno que dá luminosidade</li>
+      <li>Nozes, castanhas e sementes — zinco e selênio para a pele</li>
+      <li>Água — mínimo 2L por dia. É o cosmético mais barato do mundo.</li>
+      <li>Chá verde — polifenóis que combatem envelhecimento</li>
+    </ul>
+  </div>
+
+  <div class="alim-card">
+    <h4 style="color:#f87171;">❌ Reduza isso</h4>
+    <ul>
+      <li>Açúcar refinado — causa glicação (envelhece a pele)</li>
+      <li>Ultraprocessados — inflamam, aumentam acne e apagam o brilho</li>
+      <li>Excesso de leite (para peles acneicas) — pode piorar inflamação</li>
+      <li>Álcool — desidrata e dilata poros</li>
+      <li>Frituras — aumentam oleosidade e inflamação</li>
+    </ul>
+  </div>
+
+  <div class="acc-item mt-sm">
+    <div class="acc-header" onclick="toggleAcc(this)"><span>📋 Cardápio Sugerido — 1 Semana</span><span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <div class="step"><strong>Segunda-feira</strong><span>Café: smoothie verde (banana + espinafre + leite vegetal). Almoço: frango grelhado + salada colorida. Jantar: sopa de legumes.</span></div>
+      <div class="step"><strong>Terça-feira</strong><span>Café: tapioca com ovo + suco de laranja natural. Almoço: peixe + arroz + brócolis. Jantar: omelete de legumes.</span></div>
+      <div class="step"><strong>Quarta-feira</strong><span>Café: iogurte natural + granola + frutas vermelhas. Almoço: carne vermelha magra + feijão + salada. Jantar: wrap de frango light.</span></div>
+      <div class="step"><strong>Quinta-feira</strong><span>Café: vitamina de abacate + cacau. Almoço: salmão + batata-doce + salada. Jantar: sopa detox (cúrcuma, gengibre, cenoura).</span></div>
+      <div class="step"><strong>Sexta-feira</strong><span>Café: pão integral + pasta de amendoim + banana. Almoço: frango + quinoa + legumes. Jantar: livre (com consciência).</span></div>
+      <div class="step"><strong>Sábado</strong><span>Café: panqueca de aveia com mel. Almoço: churrasco com salada. Jantar: pizza integral ou massa integral.</span></div>
+      <div class="step"><strong>Domingo</strong><span>Café da manhã reforçado. Almoço livre (família). Jantar leve: salada com atum + torrada integral.</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── M6: AFIRMAÇÕES ── -->
+<section id="m6" class="mt pb">
+  <p class="section-title">Módulo 6</p>
+  <h2 class="section-heading">💜 Afirmações dos 21 Dias</h2>
+  <p style="font-size:14px;color:var(--text-mid);margin-bottom:24px;">Leia uma ao acordar. Em voz alta. Olhando no espelho.</p>
+
+  <div class="afirmacao">Dia 1 — <em>"Eu estou no controle da minha rotina e da minha vida."</em></div>
+  <div class="afirmacao">Dia 2 — <em>"Minha pele é saudável e está sempre melhorando."</em></div>
+  <div class="afirmacao">Dia 3 — <em>"Eu cuido de mim porque mereço o meu melhor."</em></div>
+  <div class="afirmacao">Dia 4 — <em>"Cada hábito que construo hoje é um presente para o meu futuro."</em></div>
+  <div class="afirmacao">Dia 5 — <em>"Eu me alimento bem porque meu corpo merece combustível de qualidade."</em></div>
+  <div class="afirmacao">Dia 6 — <em>"Eu tenho energia e disposição para viver o meu melhor dia."</em></div>
+  <div class="afirmacao">Dia 7 — <em>"Sou consistente. Cada pequena ação me leva mais longe."</em></div>
+  <div class="afirmacao">Dia 8 — <em>"Minha beleza vem de dentro e se reflete fora."</em></div>
+  <div class="afirmacao">Dia 9 — <em>"Eu escolho a paz. A minha mente tranquila cria uma vida tranquila."</em></div>
+  <div class="afirmacao">Dia 10 — <em>"Estou crescendo todo dia, mesmo que de forma invisível."</em></div>
+  <div class="afirmacao">Dia 11 — <em>"Meu corpo é forte e capaz. Eu o trato com respeito."</em></div>
+  <div class="afirmacao">Dia 12 — <em>"Eu escolho alimentos que me nutrem e me fazem brilhar."</em></div>
+  <div class="afirmacao">Dia 13 — <em>"Minha pele reflete o amor que tenho por mim mesma."</em></div>
+  <div class="afirmacao">Dia 14 — <em>"Eu sei descansar. O descanso é parte do meu sucesso."</em></div>
+  <div class="afirmacao">Dia 15 — <em>"Já cheguei longe. Vou ainda mais longe."</em></div>
+  <div class="afirmacao">Dia 16 — <em>"Eu sou disciplinada, focada e consistente."</em></div>
+  <div class="afirmacao">Dia 17 — <em>"Cada dia que me cuido, me torno uma versão melhor."</em></div>
+  <div class="afirmacao">Dia 18 — <em>"Eu mereço sentir leveza, beleza e bem-estar todo dia."</em></div>
+  <div class="afirmacao">Dia 19 — <em>"Minha rotina é meu poder. Ninguém pode tirar isso de mim."</em></div>
+  <div class="afirmacao">Dia 20 — <em>"Eu já não sou quem era 20 dias atrás. Evolui."</em></div>
+  <div class="afirmacao">Dia 21 — <em>"Eu sou Glow. Eu sou transformação. Eu sou a minha melhor versão."</em></div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── M7: SONO ── -->
+<section id="m7" class="mt pb">
+  <p class="section-title">Módulo 7</p>
+  <h2 class="section-heading">🌙 Guia de Sono & Recuperação</h2>
+
+  <div class="acc-item">
+    <div class="acc-header" onclick="toggleAcc(this)"><span>Por que o sono muda sua pele?</span><span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <p>Durante o sono, o corpo produz colágeno, repara células danificadas e regula hormônios. Dormir mal por apenas 3 dias seguidos aumenta visualmente rugas, olheiras e oleosidade. O sono é o cosmético que nenhum produto substitui.</p>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-header" onclick="toggleAcc(this)"><span>🌙 Protocolo Noturno Completo</span><span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <div class="step"><strong>21h — Luz quente no ambiente</strong><span>Troque luzes brancas por amarelas. Isso sinaliza ao cérebro que é hora de dormir.</span></div>
+      <div class="step"><strong>21h30 — Última refeição leve</strong><span>Nada pesado após esse horário. Chá de camomila ou melissa ajudam a relaxar.</span></div>
+      <div class="step"><strong>22h — Skincare noturno</strong><span>Complete sua rotina de pele. O ritual em si já acalma o sistema nervoso.</span></div>
+      <div class="step"><strong>22h15 — Celular no silencioso</strong><span>Coloque o celular longe da cama. A luz azul suprime a melatonina.</span></div>
+      <div class="step"><strong>22h30 — 5 min de respiração</strong><span>4s inspira → 4s segura → 4s expira → 4s segura. Repita 5x. Ativa o nervo vago.</span></div>
+      <div class="step"><strong>22h45 — Deitar</strong><span>Cama fria (20-22°C), quarto escuro, travesseiro firme. Condições ideais para sono profundo.</span></div>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-header" onclick="toggleAcc(this)"><span>☀️ Protocolo Matinal (acordar bem)</span><span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <div class="step"><strong>Não pegue o celular imediatamente</strong><span>Os primeiros 10 minutos do dia moldam seu humor inteiro. Fique com você mesma primeiro.</span></div>
+      <div class="step"><strong>Luz natural assim que acordar</strong><span>Abra a janela ou saia brevemente. Luz natural regula o ritmo circadiano e melhora o humor.</span></div>
+      <div class="step"><strong>Água antes do café</strong><span>O corpo fica 7-8h sem água durante o sono. Reidrate antes de qualquer estimulante.</span></div>
+      <div class="step"><strong>1 intenção antes de qualquer tela</strong><span>O que você quer sentir hoje? Uma frase. Isso ancora o dia com propósito.</span></div>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <div class="acc-header" onclick="toggleAcc(this)"><span>💊 Suplementos que ajudam o sono</span><span class="acc-arrow">▼</span></div>
+    <div class="acc-body">
+      <ul>
+        <li><strong>Magnésio glicina</strong> — relaxa músculos e melhora qualidade do sono profundo</li>
+        <li><strong>Melatonina 0,5mg</strong> — use só se necessário. Comece com dose mínima</li>
+        <li><strong>L-teanina</strong> — reduz ansiedade sem causar sonolência diurna</li>
+        <li><strong>Ashwagandha</strong> — adaptógeno que reduz cortisol noturno</li>
+        <li><strong>Colágeno hidrolisado + vitamina C</strong> — tome à noite para máxima síntese durante o sono</li>
+      </ul>
+      <p style="margin-top:12px;font-size:12px;opacity:0.6;">* Consulte um médico antes de iniciar qualquer suplementação.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <p style="font-size:22px;margin-bottom:8px;">💕</p>
+  <p style="font-weight:700;margin-bottom:6px;">Glow Girl Up Premium</p>
+  <p style="margin-bottom:16px;">Instagram: <a href="https://instagram.com/glowgirlup.oficial" target="_blank">@glowgirlup.oficial</a></p>
+  <p style="max-width:340px;margin:0 auto;opacity:0.5;line-height:1.6;">
+    Este conteúdo é exclusivo para compradoras. Não compartilhe o link desta página.
+    Dúvidas? Fale com a gente pelo Instagram.
+  </p>
+</footer>
+
+<script>
+// Accordion
+function toggleAcc(header) {
+  const item = header.parentElement;
+  item.classList.toggle('open');
+}
+
+// Skin tabs
+function setSkin(type, btn) {
+  document.querySelectorAll('.skin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.skin-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('skin-' + type).classList.add('active');
+}
+
+// Checklist
+function markCheck(input) {
+  const item = input.closest('.check-item');
+  item.classList.toggle('done', input.checked);
+}
+
+// Smooth scroll to section
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
