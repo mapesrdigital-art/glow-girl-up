@@ -1751,6 +1751,8 @@
     document.getElementById('shareOverlay').classList.remove('active');
     showToast('📸 Gerando imagem...');
 
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
     const captureDiv = document.createElement('div');
     captureDiv.style.cssText = [
       'position:fixed','top:-9999px','left:0',
@@ -1776,16 +1778,24 @@
       .then(canvas => {
         document.body.removeChild(captureDiv);
         const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-        // Mostra modal com imagem — usuário pressiona a imagem para salvar no celular
+        // No celular: só mostra a imagem para o usuário pressionar e salvar
+        // No desktop: mostra botão de download também
+        const downloadBtn = isMobile ? '' :
+          `<a href="${dataUrl}" download="meu-planner-ia.jpg"
+             style="display:block;background:#6C47FF;color:#fff;text-decoration:none;padding:14px;border-radius:14px;font-weight:700;font-size:15px;text-align:center;margin-top:12px;">
+             ⬇️ Baixar Imagem
+           </a>`;
         showDownloadModal(`
           <div style="text-align:center;">
             <div style="font-size:19px;font-weight:800;color:#1A1626;margin-bottom:4px;">📸 Imagem pronta!</div>
             <div style="font-size:13px;color:#7B7491;margin-bottom:14px;">
-              📱 <strong>Celular:</strong> pressione a imagem por 2s → "Salvar nas Fotos"<br>
-              💻 <strong>PC:</strong> clique no botão baixar abaixo
+              ${isMobile
+                ? '👇 <strong>Pressione a imagem abaixo por 2 segundos</strong> e toque em "Salvar nas Fotos"'
+                : '💻 Clique em Baixar Imagem abaixo'}
             </div>
-            <img src="${dataUrl}" style="width:100%;max-width:340px;border-radius:14px;display:block;margin:0 auto 16px;box-shadow:0 4px 20px rgba(0,0,0,0.12);" />
-            <a href="${dataUrl}" download="meu-planner-ia.jpg" style="display:block;background:#6C47FF;color:#fff;text-decoration:none;padding:14px;border-radius:14px;font-weight:700;font-size:15px;text-align:center;">⬇️ Baixar Imagem</a>
+            <img src="${dataUrl}"
+                 style="width:100%;max-width:340px;border-radius:14px;display:block;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,0.12);" />
+            ${downloadBtn}
           </div>
         `);
       })
@@ -1798,6 +1808,32 @@
   function downloadPDF() {
     document.getElementById('shareOverlay').classList.remove('active');
 
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    // ── CELULAR: captura o resultado como imagem (funciona em todos os browsers mobile) ──
+    if (isMobile) {
+      showToast('✨ Gerando seu planner...');
+      const resultBody = document.getElementById('resultBody');
+      if (!resultBody) { showToast('📸 Tire um screenshot da tela!'); return; }
+      html2canvas(resultBody, { backgroundColor: '#FFFFFF', scale: 2, useCORS: true })
+        .then(canvas => {
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.93);
+          showDownloadModal(`
+            <div style="text-align:center;">
+              <div style="font-size:19px;font-weight:800;color:#1A1626;margin-bottom:4px;">✨ Seu Planner está pronto!</div>
+              <div style="font-size:13px;color:#7B7491;margin-bottom:14px;">
+                👇 <strong>Pressione a imagem por 2 segundos</strong> e toque em "Salvar nas Fotos"
+              </div>
+              <img src="${dataUrl}"
+                   style="width:100%;border-radius:14px;display:block;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,0.12);" />
+            </div>
+          `);
+        })
+        .catch(() => showToast('📸 Tire um screenshot da tela!'));
+      return;
+    }
+
+    // ── DESKTOP: gera PDF de verdade via jsPDF ────────────────────────────────
     try {
       const { objetivo, estilo, tempo } = answers;
       const obj = objetivo || 'rotina';
@@ -1922,26 +1958,9 @@
         y += 10 + (glines.length - 1) * 4;
       });
 
-      // ── MODAL DE DOWNLOAD ─────────────────────────────────────
-      // Usa data URI — funciona em iOS, Android e Desktop sem popup blocker
-      const pdfDataUri = doc.output('datauristring');
-
-      showDownloadModal(`
-        <div style="text-align:center;">
-          <div style="font-size:19px;font-weight:800;color:#1A1626;margin-bottom:4px;">📄 PDF pronto!</div>
-          <div style="font-size:13px;color:#7B7491;margin-bottom:20px;">
-            Toque em <strong>Abrir PDF</strong> para visualizar e salvar no seu celular
-          </div>
-          <a href="${pdfDataUri}" target="_blank" rel="noopener"
-             style="display:block;background:#6C47FF;color:#fff;text-decoration:none;padding:15px;border-radius:14px;font-weight:700;font-size:16px;text-align:center;margin-bottom:12px;">
-            📄 Abrir PDF
-          </a>
-          <a href="${pdfDataUri}" download="meu-planner-ia.pdf"
-             style="display:block;background:#EDE9FF;color:#6C47FF;text-decoration:none;padding:14px;border-radius:14px;font-weight:700;font-size:15px;text-align:center;">
-            ⬇️ Baixar PDF (PC)
-          </a>
-        </div>
-      `);
+      // ── DESKTOP: salva o PDF diretamente ──────────────────────
+      doc.save('meu-planner-ia.pdf');
+      showToast('✅ PDF baixado!');
 
     } catch (err) {
       console.error('PDF error:', err);
