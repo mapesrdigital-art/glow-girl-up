@@ -1729,6 +1729,24 @@
     }
   }
 
+  // ── Modal de download (não usa programmatic click — funciona no iOS) ──
+  function showDownloadModal(contentHtml) {
+    const old = document.getElementById('dlModal');
+    if (old) old.remove();
+    const modal = document.createElement('div');
+    modal.id = 'dlModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);display:flex;align-items:flex-end;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 44px;width:100%;max-width:500px;box-sizing:border-box;max-height:90vh;overflow-y:auto;">
+        <div style="text-align:right;margin-bottom:4px;">
+          <button onclick="document.getElementById('dlModal').remove()" style="background:#f0f0f0;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;color:#555;line-height:1;">✕</button>
+        </div>
+        ${contentHtml}
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  }
+
   function saveImage() {
     document.getElementById('shareOverlay').classList.remove('active');
     showToast('📸 Gerando imagem...');
@@ -1748,7 +1766,6 @@
       </div>
       <div style="padding:16px 16px 0;">
         ${document.querySelector('.result-card').outerHTML}
-        ${document.querySelectorAll('.result-card')[2]?.outerHTML || ''}
       </div>
       <div style="text-align:center;padding:16px 0 0;font-size:11px;color:#7B7491;">✦ plannerIA.app</div>
     `;
@@ -1758,29 +1775,19 @@
     html2canvas(captureDiv, { backgroundColor: '#FAF9F7', scale: 2, useCORS: true })
       .then(canvas => {
         document.body.removeChild(captureDiv);
-
-        canvas.toBlob(async (blob) => {
-          // Web Share API — abre menu nativo no celular (iOS 15+ e Android)
-          if (navigator.canShare) {
-            const file = new File([blob], 'meu-planner-ia.jpg', { type: 'image/jpeg' });
-            if (navigator.canShare({ files: [file] })) {
-              try {
-                await navigator.share({ files: [file], title: 'Meu Planner IA' });
-                showToast('✅ Imagem compartilhada!');
-                return;
-              } catch (e) {
-                if (e.name === 'AbortError') { showToast('Pronto — toque de novo para salvar 📸'); return; }
-              }
-            }
-          }
-          // Fallback desktop / Android sem Web Share
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url; a.download = 'meu-planner-ia.jpg';
-          document.body.appendChild(a); a.click(); document.body.removeChild(a);
-          setTimeout(() => URL.revokeObjectURL(url), 3000);
-          showToast('✅ Imagem salva!');
-        }, 'image/jpeg', 0.92);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        // Mostra modal com imagem — usuário pressiona a imagem para salvar no celular
+        showDownloadModal(`
+          <div style="text-align:center;">
+            <div style="font-size:19px;font-weight:800;color:#1A1626;margin-bottom:4px;">📸 Imagem pronta!</div>
+            <div style="font-size:13px;color:#7B7491;margin-bottom:14px;">
+              📱 <strong>Celular:</strong> pressione a imagem por 2s → "Salvar nas Fotos"<br>
+              💻 <strong>PC:</strong> clique no botão baixar abaixo
+            </div>
+            <img src="${dataUrl}" style="width:100%;max-width:340px;border-radius:14px;display:block;margin:0 auto 16px;box-shadow:0 4px 20px rgba(0,0,0,0.12);" />
+            <a href="${dataUrl}" download="meu-planner-ia.jpg" style="display:block;background:#6C47FF;color:#fff;text-decoration:none;padding:14px;border-radius:14px;font-weight:700;font-size:15px;text-align:center;">⬇️ Baixar Imagem</a>
+          </div>
+        `);
       })
       .catch(() => {
         if (document.body.contains(captureDiv)) document.body.removeChild(captureDiv);
@@ -1788,9 +1795,8 @@
       });
   }
 
-  async function downloadPDF() {
+  function downloadPDF() {
     document.getElementById('shareOverlay').classList.remove('active');
-    showToast('📄 Gerando PDF...');
 
     try {
       const { objetivo, estilo, tempo } = answers;
@@ -1916,30 +1922,26 @@
         y += 10 + (glines.length - 1) * 4;
       });
 
-      // ── DOWNLOAD ──────────────────────────────────────────────
-      const pdfBlob = doc.output('blob');
+      // ── MODAL DE DOWNLOAD ─────────────────────────────────────
+      // Usa data URI — funciona em iOS, Android e Desktop sem popup blocker
+      const pdfDataUri = doc.output('datauristring');
 
-      // 1. Web Share API — menu nativo do celular (iOS 15+ e Android moderno)
-      if (navigator.canShare) {
-        const file = new File([pdfBlob], 'meu-planner-ia.pdf', { type: 'application/pdf' });
-        if (navigator.canShare({ files: [file] })) {
-          try {
-            await navigator.share({ files: [file], title: 'Meu Planner IA' });
-            showToast('✅ PDF compartilhado!');
-            return;
-          } catch (e) {
-            if (e.name === 'AbortError') { showToast('PDF pronto — toque de novo para salvar 📄'); return; }
-          }
-        }
-      }
-
-      // 2. Fallback — link de download direto (Android/Desktop)
-      const url = URL.createObjectURL(pdfBlob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'meu-planner-ia.pdf';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 3000);
-      showToast('✅ PDF baixado!');
+      showDownloadModal(`
+        <div style="text-align:center;">
+          <div style="font-size:19px;font-weight:800;color:#1A1626;margin-bottom:4px;">📄 PDF pronto!</div>
+          <div style="font-size:13px;color:#7B7491;margin-bottom:20px;">
+            Toque em <strong>Abrir PDF</strong> para visualizar e salvar no seu celular
+          </div>
+          <a href="${pdfDataUri}" target="_blank" rel="noopener"
+             style="display:block;background:#6C47FF;color:#fff;text-decoration:none;padding:15px;border-radius:14px;font-weight:700;font-size:16px;text-align:center;margin-bottom:12px;">
+            📄 Abrir PDF
+          </a>
+          <a href="${pdfDataUri}" download="meu-planner-ia.pdf"
+             style="display:block;background:#EDE9FF;color:#6C47FF;text-decoration:none;padding:14px;border-radius:14px;font-weight:700;font-size:15px;text-align:center;">
+            ⬇️ Baixar PDF (PC)
+          </a>
+        </div>
+      `);
 
     } catch (err) {
       console.error('PDF error:', err);
