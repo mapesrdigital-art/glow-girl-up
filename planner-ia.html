@@ -1731,7 +1731,11 @@
     }
   }
 
-  // ── Modal de download (não usa programmatic click — funciona no iOS) ──
+  // ── Detecta ambiente ──────────────────────────────────────────
+  const IS_INSTAGRAM = /Instagram/.test(navigator.userAgent);
+  const IS_MOBILE    = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // ── Modal de resultado ────────────────────────────────────────
   function showDownloadModal(contentHtml) {
     const old = document.getElementById('dlModal');
     if (old) old.remove();
@@ -1741,7 +1745,7 @@
     modal.innerHTML = `
       <div style="background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 44px;width:100%;max-width:500px;box-sizing:border-box;max-height:90vh;overflow-y:auto;">
         <div style="text-align:right;margin-bottom:4px;">
-          <button onclick="document.getElementById('dlModal').remove()" style="background:#f0f0f0;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;color:#555;line-height:1;">✕</button>
+          <button type="button" onclick="document.getElementById('dlModal').remove()" style="background:#f0f0f0;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;color:#555;line-height:1;">✕</button>
         </div>
         ${contentHtml}
       </div>`;
@@ -1749,130 +1753,143 @@
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
   }
 
+  // ── Modal Instagram: instrui abrir no Safari ──────────────────
+  function showInstagramModal() {
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    showDownloadModal(`
+      <div style="text-align:center;padding:4px 0 8px;">
+        <div style="font-size:38px;margin-bottom:10px;">🌐</div>
+        <div style="font-size:18px;font-weight:800;color:#1A1626;margin-bottom:6px;">Abrir no ${isIOS ? 'Safari' : 'Chrome'} para salvar</div>
+        <div style="font-size:13px;color:#7B7491;line-height:1.7;margin-bottom:18px;">
+          O navegador do Instagram bloqueia salvamentos.<br>
+          Siga os passos abaixo — é rápido! ✨
+        </div>
+        <div style="background:#F7F6FF;border-radius:14px;padding:16px;text-align:left;margin-bottom:16px;">
+          <div style="font-size:14px;color:#1A1626;line-height:2;">
+            ${isIOS
+              ? `<b>1.</b> Toque nos <b>3 pontos ···</b> no canto superior direito<br>
+                 <b>2.</b> Toque em <b>"Abrir no Safari"</b><br>
+                 <b>3.</b> Refaça o teste rapidinho e salve ✅`
+              : `<b>1.</b> Toque nos <b>3 pontos ⋮</b> no canto superior direito<br>
+                 <b>2.</b> Toque em <b>"Abrir no navegador"</b><br>
+                 <b>3.</b> Refaça o teste rapidinho e salve ✅`}
+          </div>
+        </div>
+        <div style="background:#EDE9FF;border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12px;color:#6C47FF;font-weight:600;">glow-girl-up.vercel.app</span>
+          <button type="button" onclick="navigator.clipboard?.writeText('https://glow-girl-up.vercel.app').then(()=>showToast('✅ Link copiado!'))" style="background:#6C47FF;color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;">Copiar link</button>
+        </div>
+      </div>`);
+  }
+
   function saveImage() {
     try {
-    document.getElementById('shareOverlay')?.classList.remove('active');
+      document.getElementById('shareOverlay')?.classList.remove('active');
 
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      // ── Browser do Instagram: não suporta downloads — instrui abrir no Safari ──
+      if (IS_INSTAGRAM) { showInstagramModal(); return; }
 
-    // Se html2canvas não carregou (CDN bloqueado), mostra instrução de screenshot
-    if (typeof html2canvas === 'undefined') {
-      showDownloadModal(`
-        <div style="text-align:center;padding:8px 0;">
-          <div style="font-size:40px;margin-bottom:12px;">📸</div>
-          <div style="font-size:18px;font-weight:800;color:#1A1626;margin-bottom:8px;">Salvar resultado</div>
-          <div style="font-size:14px;color:#7B7491;line-height:1.7;margin-bottom:16px;">
-            Tire um <strong>screenshot</strong> da tela para guardar seu planner!
-          </div>
-          <div style="background:#EDE9FF;border-radius:12px;padding:14px;font-size:13px;color:#6C47FF;text-align:left;">
-            📱 <strong>iPhone:</strong> botão lateral + volume cima<br>
-            🤖 <strong>Android:</strong> volume baixo + botão ligar
-          </div>
-        </div>`);
-      return;
-    }
-
-    showToast('📸 Gerando imagem...');
-
-    const captureDiv = document.createElement('div');
-    captureDiv.style.cssText = [
-      'position:fixed','top:-9999px','left:0',
-      'width:375px','background:#FAF9F7',
-      "font-family:'Plus Jakarta Sans',sans-serif",
-      'padding:0 0 24px 0','border-radius:0'
-    ].join(';');
-
-    captureDiv.innerHTML = `
-      <div style="background:linear-gradient(135deg,#6C47FF,#8B6CFF);padding:32px 24px;color:white;text-align:center;">
-        <div style="font-size:22px;font-weight:800;margin-bottom:6px;">✨ Meu Planner IA</div>
-        <div style="font-size:13px;opacity:0.85;">Gerado especialmente para mim</div>
-      </div>
-      <div style="padding:16px 16px 0;">
-        ${document.querySelector('.result-card').outerHTML}
-      </div>
-      <div style="text-align:center;padding:16px 0 0;font-size:11px;color:#7B7491;">✦ plannerIA.app</div>
-    `;
-
-    document.body.appendChild(captureDiv);
-
-    html2canvas(captureDiv, { backgroundColor: '#FAF9F7', scale: 2, useCORS: true })
-      .then(canvas => {
-        document.body.removeChild(captureDiv);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
-        // No celular: só mostra a imagem para o usuário pressionar e salvar
-        // No desktop: mostra botão de download também
-        const downloadBtn = isMobile ? '' :
-          `<a href="${dataUrl}" download="meu-planner-ia.jpg"
-             style="display:block;background:#6C47FF;color:#fff;text-decoration:none;padding:14px;border-radius:14px;font-weight:700;font-size:15px;text-align:center;margin-top:12px;">
-             ⬇️ Baixar Imagem
-           </a>`;
-        showDownloadModal(`
-          <div style="text-align:center;">
-            <div style="font-size:19px;font-weight:800;color:#1A1626;margin-bottom:4px;">📸 Imagem pronta!</div>
-            <div style="font-size:13px;color:#7B7491;margin-bottom:14px;">
-              ${isMobile
-                ? '👇 <strong>Pressione a imagem abaixo por 2 segundos</strong> e toque em "Salvar nas Fotos"'
-                : '💻 Clique em Baixar Imagem abaixo'}
+      // ── Mobile (Safari/Chrome): html2canvas → modal com imagem para long-press ──
+      if (IS_MOBILE) {
+        if (typeof html2canvas === 'undefined') {
+          showDownloadModal(`<div style="text-align:center;padding:8px 0;">
+            <div style="font-size:38px;margin-bottom:10px;">📸</div>
+            <div style="font-size:17px;font-weight:800;color:#1A1626;margin-bottom:8px;">Salvar resultado</div>
+            <div style="font-size:13px;color:#7B7491;line-height:1.7;margin-bottom:14px;">
+              Tire um <strong>screenshot</strong> da tela para guardar seu planner!
             </div>
-            <img src="${dataUrl}"
-                 style="width:100%;max-width:340px;border-radius:14px;display:block;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,0.12);" />
-            ${downloadBtn}
+            <div style="background:#EDE9FF;border-radius:12px;padding:12px;font-size:13px;color:#6C47FF;text-align:left;">
+              📱 <b>iPhone:</b> botão lateral + volume cima<br>
+              🤖 <b>Android:</b> volume baixo + botão ligar
+            </div></div>`);
+          return;
+        }
+        showToast('📸 Gerando imagem...');
+        const captureDiv = document.createElement('div');
+        captureDiv.style.cssText = 'position:fixed;top:-9999px;left:0;width:375px;background:#FAF9F7;font-family:\'Plus Jakarta Sans\',sans-serif;padding:0 0 24px;';
+        captureDiv.innerHTML = `
+          <div style="background:linear-gradient(135deg,#6C47FF,#8B6CFF);padding:28px 20px;color:#fff;text-align:center;">
+            <div style="font-size:20px;font-weight:800;margin-bottom:4px;">✨ Meu Planner IA</div>
+            <div style="font-size:12px;opacity:0.85;">Gerado especialmente para mim</div>
           </div>
-        `);
-      })
-      .catch(() => {
-        if (document.body.contains(captureDiv)) document.body.removeChild(captureDiv);
-        showToast('📸 Tire um screenshot da tela!');
-      });
-    } catch(e) {
-      showToast('📸 Tire um screenshot da tela!');
-    }
+          <div style="padding:12px 12px 0;">${document.querySelector('.result-card')?.outerHTML || ''}</div>
+          <div style="text-align:center;padding:12px 0 0;font-size:10px;color:#7B7491;">✦ glow-girl-up.vercel.app</div>`;
+        document.body.appendChild(captureDiv);
+        html2canvas(captureDiv, { backgroundColor: '#FAF9F7', scale: 2, useCORS: true })
+          .then(canvas => {
+            document.body.removeChild(captureDiv);
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+            showDownloadModal(`<div style="text-align:center;">
+              <div style="font-size:18px;font-weight:800;color:#1A1626;margin-bottom:6px;">📸 Imagem pronta!</div>
+              <div style="font-size:13px;color:#7B7491;margin-bottom:14px;">
+                👇 <b>Pressione a imagem por 2 segundos</b> → "Salvar nas Fotos"
+              </div>
+              <img src="${dataUrl}" style="width:100%;border-radius:12px;display:block;margin:0 auto;"/>
+            </div>`);
+          })
+          .catch(() => { if (document.body.contains(captureDiv)) document.body.removeChild(captureDiv); showToast('📸 Tire um screenshot!'); });
+        return;
+      }
+
+      // ── Desktop: html2canvas + botão de download ──
+      if (typeof html2canvas === 'undefined') { showToast('📸 Tire um screenshot!'); return; }
+      showToast('📸 Gerando imagem...');
+      const el = document.getElementById('resultBody') || document.querySelector('.result-card');
+      if (!el) { showToast('📸 Tire um screenshot!'); return; }
+      html2canvas(el, { backgroundColor: '#FAF9F7', scale: 2, useCORS: true })
+        .then(canvas => {
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          showDownloadModal(`<div style="text-align:center;">
+            <div style="font-size:18px;font-weight:800;color:#1A1626;margin-bottom:10px;">📸 Imagem pronta!</div>
+            <img src="${dataUrl}" style="width:100%;border-radius:12px;display:block;margin:0 auto 14px;"/>
+            <a href="${dataUrl}" download="meu-planner-ia.jpg"
+               style="display:block;background:#6C47FF;color:#fff;text-decoration:none;padding:14px;border-radius:12px;font-weight:700;font-size:15px;">
+              ⬇️ Baixar Imagem
+            </a></div>`);
+        })
+        .catch(() => showToast('📸 Tire um screenshot!'));
+    } catch(e) { showToast('📸 Tire um screenshot da tela!'); }
   }
 
   function downloadPDF() {
     try {
-    document.getElementById('shareOverlay')?.classList.remove('active');
+      document.getElementById('shareOverlay')?.classList.remove('active');
 
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      // ── Browser do Instagram: não suporta downloads ──
+      if (IS_INSTAGRAM) { showInstagramModal(); return; }
 
-    // ── CELULAR: captura o resultado como imagem (funciona em todos os browsers mobile) ──
-    if (isMobile) {
-      // Se html2canvas não carregou, instrui screenshot
-      if (typeof html2canvas === 'undefined') {
-        showDownloadModal(`
-          <div style="text-align:center;padding:8px 0;">
-            <div style="font-size:40px;margin-bottom:12px;">📸</div>
-            <div style="font-size:18px;font-weight:800;color:#1A1626;margin-bottom:8px;">Salvar resultado</div>
-            <div style="font-size:14px;color:#7B7491;line-height:1.7;margin-bottom:16px;">
+      // ── Mobile: captura resultado como imagem (nenhum browser mobile suporta PDF download confiável) ──
+      if (IS_MOBILE) {
+        if (typeof html2canvas === 'undefined') {
+          showDownloadModal(`<div style="text-align:center;padding:8px 0;">
+            <div style="font-size:38px;margin-bottom:10px;">📸</div>
+            <div style="font-size:17px;font-weight:800;color:#1A1626;margin-bottom:8px;">Salvar resultado</div>
+            <div style="font-size:13px;color:#7B7491;line-height:1.7;margin-bottom:14px;">
               Tire um <strong>screenshot</strong> da tela para guardar seu planner!
             </div>
-            <div style="background:#EDE9FF;border-radius:12px;padding:14px;font-size:13px;color:#6C47FF;text-align:left;">
-              📱 <strong>iPhone:</strong> botão lateral + volume cima<br>
-              🤖 <strong>Android:</strong> volume baixo + botão ligar
-            </div>
-          </div>`);
+            <div style="background:#EDE9FF;border-radius:12px;padding:12px;font-size:13px;color:#6C47FF;text-align:left;">
+              📱 <b>iPhone:</b> botão lateral + volume cima<br>
+              🤖 <b>Android:</b> volume baixo + botão ligar
+            </div></div>`);
+          return;
+        }
+        showToast('✨ Gerando seu planner...');
+        const resultBody = document.getElementById('resultBody');
+        if (!resultBody) { showToast('📸 Tire um screenshot!'); return; }
+        html2canvas(resultBody, { backgroundColor: '#FAF9F7', scale: 2, useCORS: true })
+          .then(canvas => {
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.93);
+            showDownloadModal(`<div style="text-align:center;">
+              <div style="font-size:18px;font-weight:800;color:#1A1626;margin-bottom:6px;">✨ Seu Planner pronto!</div>
+              <div style="font-size:13px;color:#7B7491;margin-bottom:14px;">
+                👇 <b>Pressione a imagem por 2 segundos</b> → "Salvar nas Fotos"
+              </div>
+              <img src="${dataUrl}" style="width:100%;border-radius:12px;display:block;margin:0 auto;"/>
+            </div>`);
+          })
+          .catch(() => showToast('📸 Tire um screenshot!'));
         return;
       }
-      showToast('✨ Gerando seu planner...');
-      const resultBody = document.getElementById('resultBody');
-      if (!resultBody) { showToast('📸 Tire um screenshot da tela!'); return; }
-      html2canvas(resultBody, { backgroundColor: '#FFFFFF', scale: 2, useCORS: true })
-        .then(canvas => {
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.93);
-          showDownloadModal(`
-            <div style="text-align:center;">
-              <div style="font-size:19px;font-weight:800;color:#1A1626;margin-bottom:4px;">✨ Seu Planner está pronto!</div>
-              <div style="font-size:13px;color:#7B7491;margin-bottom:14px;">
-                👇 <strong>Pressione a imagem por 2 segundos</strong> e toque em "Salvar nas Fotos"
-              </div>
-              <img src="${dataUrl}"
-                   style="width:100%;border-radius:14px;display:block;margin:0 auto;box-shadow:0 4px 20px rgba(0,0,0,0.12);" />
-            </div>
-          `);
-        })
-        .catch(() => showToast('📸 Tire um screenshot da tela!'));
-      return;
-    }
 
     // ── DESKTOP: gera PDF de verdade via jsPDF ────────────────────────────────
     try {
