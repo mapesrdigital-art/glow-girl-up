@@ -1733,17 +1733,13 @@
     document.getElementById('shareOverlay').classList.remove('active');
     showToast('📸 Gerando imagem...');
 
-    const resultHeader = document.querySelector('.result-header');
-    const firstCards = document.querySelectorAll('.result-card');
-
-    // Create a capture div
     const captureDiv = document.createElement('div');
-    captureDiv.style.cssText = `
-      position: fixed; top: -9999px; left: 0;
-      width: 375px; background: #FAF9F7;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      padding: 0 0 24px 0; border-radius: 0;
-    `;
+    captureDiv.style.cssText = [
+      'position:fixed','top:-9999px','left:0',
+      'width:375px','background:#FAF9F7',
+      "font-family:'Plus Jakarta Sans',sans-serif",
+      'padding:0 0 24px 0','border-radius:0'
+    ].join(';');
 
     captureDiv.innerHTML = `
       <div style="background:linear-gradient(135deg,#6C47FF,#8B6CFF);padding:32px 24px;color:white;text-align:center;">
@@ -1754,180 +1750,200 @@
         ${document.querySelector('.result-card').outerHTML}
         ${document.querySelectorAll('.result-card')[2]?.outerHTML || ''}
       </div>
-      <div style="text-align:center;padding:16px 0 0;font-size:11px;color:#7B7491;">✦ plannerIA.app — Grátis por tempo limitado</div>
+      <div style="text-align:center;padding:16px 0 0;font-size:11px;color:#7B7491;">✦ plannerIA.app</div>
     `;
 
     document.body.appendChild(captureDiv);
 
-    html2canvas(captureDiv, {
-      backgroundColor: '#FAF9F7',
-      scale: 2,
-      useCORS: true,
-    }).then(canvas => {
-      const link = document.createElement('a');
-      link.download = 'meu-planner-ia.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      document.body.removeChild(captureDiv);
-      showToast('✅ Imagem salva!');
-    }).catch(() => {
-      document.body.removeChild(captureDiv);
-      showToast('📸 Salve um screenshot da tela!');
-    });
+    html2canvas(captureDiv, { backgroundColor: '#FAF9F7', scale: 2, useCORS: true })
+      .then(canvas => {
+        document.body.removeChild(captureDiv);
+
+        canvas.toBlob(async (blob) => {
+          // Web Share API — abre menu nativo no celular (iOS 15+ e Android)
+          if (navigator.canShare) {
+            const file = new File([blob], 'meu-planner-ia.jpg', { type: 'image/jpeg' });
+            if (navigator.canShare({ files: [file] })) {
+              try {
+                await navigator.share({ files: [file], title: 'Meu Planner IA' });
+                showToast('✅ Imagem compartilhada!');
+                return;
+              } catch (e) {
+                if (e.name === 'AbortError') { showToast('Pronto — toque de novo para salvar 📸'); return; }
+              }
+            }
+          }
+          // Fallback desktop / Android sem Web Share
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = 'meu-planner-ia.jpg';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 3000);
+          showToast('✅ Imagem salva!');
+        }, 'image/jpeg', 0.92);
+      })
+      .catch(() => {
+        if (document.body.contains(captureDiv)) document.body.removeChild(captureDiv);
+        showToast('📸 Tire um screenshot da tela!');
+      });
   }
 
   async function downloadPDF() {
     document.getElementById('shareOverlay').classList.remove('active');
     showToast('📄 Gerando PDF...');
 
-    const { objetivo, estilo, tempo } = answers;
-    const obj = objetivo || 'rotina';
-    const est = estilo || 'equilibrada';
-    const tmp = tempo || '30';
-
-    const routine = plannerData.routines[est] || plannerData.routines.equilibrada;
-    const habits = plannerData.habits[obj] || plannerData.habits.rotina;
-    const finKey = obj === 'economizar' ? 'economizar' : 'default';
-    const finance = plannerData.finance[finKey];
-    const goals = plannerData.goals[obj] || plannerData.goals.rotina;
-    const checklist = plannerData.checklist[tmp] || plannerData.checklist['30'];
-    const date = new Date().toLocaleDateString('pt-BR');
-
-    // Cria div oculto com layout do PDF
-    const wrap = document.createElement('div');
-    wrap.style.cssText = [
-      'position:fixed', 'top:-9999px', 'left:0',
-      'width:794px',   // A4 em 96dpi ≈ 794px
-      'background:#FAF9F7',
-      'font-family:\'Plus Jakarta Sans\',sans-serif',
-      'color:#1A1626',
-      'padding:48px 56px 64px',
-      'line-height:1.6',
-      'box-sizing:border-box'
-    ].join(';');
-
-    wrap.innerHTML = `
-      <!-- Cabeçalho -->
-      <div style="background:linear-gradient(135deg,#6C47FF,#8B6CFF);border-radius:16px;padding:32px 36px;color:#fff;margin-bottom:32px;">
-        <div style="font-size:28px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;">✦ Meu Planner IA</div>
-        <div style="font-size:14px;opacity:0.85;">Rotina ${capitalise(est)} · ${tmp} min de foco diário · Gerado em ${date}</div>
-      </div>
-
-      <!-- Rotina -->
-      <div style="margin-bottom:28px;">
-        <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">🌅 Rotina Diária</div>
-        ${routine.map(r => `
-          <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">
-            <span style="background:#EDE9FF;color:#6C47FF;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:700;white-space:nowrap;margin-top:2px;">${r.time}</span>
-            <div>
-              <div style="font-size:14px;font-weight:700;">${r.label}</div>
-              <div style="font-size:13px;color:#7B7491;">${r.desc}</div>
-            </div>
-          </div>`).join('')}
-      </div>
-
-      <!-- Checklist -->
-      <div style="margin-bottom:28px;">
-        <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">✅ Checklist Diário</div>
-        ${checklist.map(c => `
-          <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
-            <span style="width:20px;height:20px;border-radius:6px;border:2px solid #ECEAF5;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;"></span>
-            <span style="font-size:14px;">${c}</span>
-          </div>`).join('')}
-      </div>
-
-      <!-- Hábitos + Finanças (2 colunas) -->
-      <div style="display:flex;gap:24px;margin-bottom:28px;">
-        <div style="flex:1;">
-          <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">🔄 Hábitos</div>
-          ${habits.map(h => `
-            <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;">
-              <span style="font-size:18px;">${h.emoji}</span>
-              <div>
-                <div style="font-size:13px;font-weight:700;">${h.name}</div>
-                <div style="font-size:12px;color:#7B7491;">${h.freq}</div>
-              </div>
-            </div>`).join('')}
-        </div>
-        <div style="flex:1;">
-          <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">💰 Finanças</div>
-          ${finance.map(f => `
-            <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;">
-              <span style="font-size:18px;">${f.emoji}</span>
-              <div>
-                <div style="font-size:13px;font-weight:700;">${f.label}</div>
-                <div style="font-size:12px;color:#7B7491;">${f.desc}</div>
-              </div>
-            </div>`).join('')}
-        </div>
-      </div>
-
-      <!-- Metas -->
-      <div style="margin-bottom:36px;">
-        <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">🎯 Suas Mini Metas</div>
-        ${goals.map((g, i) => `
-          <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;">
-            <span style="background:#EDE9FF;color:#6C47FF;border-radius:8px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;">${i+1}</span>
-            <span style="font-size:14px;">${g}</span>
-          </div>`).join('')}
-      </div>
-
-      <!-- Rodapé -->
-      <div style="text-align:center;padding-top:20px;border-top:1px solid #ECEAF5;font-size:12px;color:#7B7491;">
-        ✦ Planner IA — Comece hoje, mude sua vida.
-      </div>
-    `;
-
-    document.body.appendChild(wrap);
-
     try {
-      const canvas = await html2canvas(wrap, {
-        backgroundColor: '#FAF9F7',
-        scale: 2,
-        useCORS: true,
-        logging: false,
-      });
-      document.body.removeChild(wrap);
+      const { objetivo, estilo, tempo } = answers;
+      const obj = objetivo || 'rotina';
+      const est = estilo || 'equilibrada';
+      const tmp = tempo || '30';
+
+      const routine  = plannerData.routines[est]  || plannerData.routines.equilibrada;
+      const habits   = plannerData.habits[obj]    || plannerData.habits.rotina;
+      const finKey   = obj === 'economizar' ? 'economizar' : 'default';
+      const finance  = plannerData.finance[finKey];
+      const goals    = plannerData.goals[obj]     || plannerData.goals.rotina;
+      const checklist= plannerData.checklist[tmp] || plannerData.checklist['30'];
+      const date     = new Date().toLocaleDateString('pt-BR');
 
       const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      const pw = 210, ph = 297, ml = 14, mr = 14, cw = 182;
+      let y = 0;
 
-      const imgData = canvas.toDataURL('image/jpeg', 0.92);
-      const pdfW = pdf.internal.pageSize.getWidth();
-      const pdfH = pdf.internal.pageSize.getHeight();
-      const ratio = canvas.height / canvas.width;
-      const imgH = pdfW * ratio;
+      const PURPLE  = [108, 71, 255];
+      const DARK    = [26, 22, 38];
+      const WHITE   = [255, 255, 255];
+      const GREY    = [123, 116, 145];
+      const LIGHT   = [237, 233, 255];
+      const BG      = [245, 244, 250];
 
-      // Divide em páginas se o conteúdo for maior que uma página A4
-      let posY = 0;
-      let remaining = imgH;
-      let pageNum = 0;
-
-      while (remaining > 0) {
-        if (pageNum > 0) pdf.addPage();
-
-        const sliceH = Math.min(remaining, pdfH);
-        const srcY = pageNum * pdfH * (canvas.height / imgH);
-        const srcH = sliceH * (canvas.height / imgH);
-
-        const sliceCanvas = document.createElement('canvas');
-        sliceCanvas.width = canvas.width;
-        sliceCanvas.height = srcH;
-        const sliceCtx = sliceCanvas.getContext('2d');
-        sliceCtx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
-
-        pdf.addImage(sliceCanvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pdfW, sliceH);
-
-        remaining -= pdfH;
-        pageNum++;
+      function pageFooter() {
+        doc.setFillColor(...BG);
+        doc.rect(0, ph - 10, pw, 10, 'F');
+        doc.setFontSize(7); doc.setTextColor(...GREY);
+        doc.text('Planner IA  —  Comece hoje, mude sua vida.', pw / 2, ph - 4, { align: 'center' });
       }
 
-      pdf.save('meu-planner-ia.pdf');
-      showToast('✅ PDF baixado com sucesso!');
+      function checkY(need) {
+        if (y + need > ph - 14) { doc.addPage(); y = 18; pageFooter(); }
+      }
+
+      function sectionTitle(label) {
+        checkY(14);
+        doc.setFontSize(11); doc.setFont(undefined, 'bold'); doc.setTextColor(...DARK);
+        doc.text(label, ml, y);
+        y += 1;
+        doc.setDrawColor(...PURPLE); doc.setLineWidth(0.35);
+        doc.line(ml, y, pw - mr, y);
+        y += 5;
+      }
+
+      // ── CAPA ──────────────────────────────────────────────────
+      doc.setFillColor(...PURPLE);
+      doc.roundedRect(ml, 14, cw, 28, 4, 4, 'F');
+      doc.setFontSize(20); doc.setFont(undefined, 'bold'); doc.setTextColor(...WHITE);
+      doc.text('Meu Planner IA', pw / 2, 27, { align: 'center' });
+      doc.setFontSize(9); doc.setFont(undefined, 'normal');
+      doc.text(`Rotina ${capitalise(est)}  ·  ${tmp} min/dia  ·  ${date}`, pw / 2, 35, { align: 'center' });
+      y = 54; pageFooter();
+
+      // ── ROTINA ────────────────────────────────────────────────
+      sectionTitle('Rotina Diária');
+      routine.forEach(r => {
+        checkY(14);
+        doc.setFillColor(...LIGHT);
+        doc.roundedRect(ml, y, 20, 6, 1.5, 1.5, 'F');
+        doc.setFontSize(7.5); doc.setFont(undefined, 'bold'); doc.setTextColor(...PURPLE);
+        doc.text(r.time, ml + 10, y + 4.2, { align: 'center' });
+        doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(...DARK);
+        doc.text(r.label, ml + 24, y + 3.5);
+        doc.setFontSize(8); doc.setFont(undefined, 'normal'); doc.setTextColor(...GREY);
+        doc.text(r.desc, ml + 24, y + 8.5, { maxWidth: cw - 26 });
+        y += 13;
+      });
+      y += 3;
+
+      // ── CHECKLIST ─────────────────────────────────────────────
+      sectionTitle('Checklist Diario');
+      checklist.forEach(c => {
+        checkY(9);
+        doc.setDrawColor(210, 205, 235); doc.setLineWidth(0.3);
+        doc.roundedRect(ml, y, 4.5, 4.5, 1, 1, 'S');
+        doc.setFontSize(8.5); doc.setFont(undefined, 'normal'); doc.setTextColor(...DARK);
+        const lines = doc.splitTextToSize(c, cw - 9);
+        doc.text(lines, ml + 7, y + 3.5);
+        y += 8 + (lines.length - 1) * 4;
+      });
+      y += 3;
+
+      // ── HÁBITOS ───────────────────────────────────────────────
+      sectionTitle('Habitos Recomendados');
+      habits.forEach(h => {
+        checkY(12);
+        doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(...DARK);
+        doc.text(h.name, ml + 4, y + 4);
+        doc.setFontSize(8); doc.setFont(undefined, 'normal'); doc.setTextColor(...GREY);
+        doc.text(h.freq, ml + 4, y + 9);
+        y += 12;
+      });
+      y += 3;
+
+      // ── FINANÇAS ──────────────────────────────────────────────
+      sectionTitle('Organizacao Financeira');
+      finance.forEach(f => {
+        checkY(13);
+        doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(...DARK);
+        doc.text(f.label, ml + 4, y + 4);
+        doc.setFontSize(8); doc.setFont(undefined, 'normal'); doc.setTextColor(...GREY);
+        const dlines = doc.splitTextToSize(f.desc, cw - 8);
+        doc.text(dlines, ml + 4, y + 9);
+        y += 9 + dlines.length * 4;
+      });
+      y += 3;
+
+      // ── METAS ─────────────────────────────────────────────────
+      sectionTitle('Suas Mini Metas');
+      goals.forEach((g, i) => {
+        checkY(12);
+        doc.setFillColor(...PURPLE);
+        doc.roundedRect(ml, y, 5.5, 5.5, 1.5, 1.5, 'F');
+        doc.setFontSize(7.5); doc.setFont(undefined, 'bold'); doc.setTextColor(...WHITE);
+        doc.text(String(i + 1), ml + 2.75, y + 4.2, { align: 'center' });
+        doc.setFontSize(9); doc.setFont(undefined, 'normal'); doc.setTextColor(...DARK);
+        const glines = doc.splitTextToSize(g, cw - 10);
+        doc.text(glines, ml + 9, y + 4.2);
+        y += 10 + (glines.length - 1) * 4;
+      });
+
+      // ── DOWNLOAD ──────────────────────────────────────────────
+      const pdfBlob = doc.output('blob');
+
+      // 1. Web Share API — menu nativo do celular (iOS 15+ e Android moderno)
+      if (navigator.canShare) {
+        const file = new File([pdfBlob], 'meu-planner-ia.pdf', { type: 'application/pdf' });
+        if (navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: 'Meu Planner IA' });
+            showToast('✅ PDF compartilhado!');
+            return;
+          } catch (e) {
+            if (e.name === 'AbortError') { showToast('PDF pronto — toque de novo para salvar 📄'); return; }
+          }
+        }
+      }
+
+      // 2. Fallback — link de download direto (Android/Desktop)
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'meu-planner-ia.pdf';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 3000);
+      showToast('✅ PDF baixado!');
+
     } catch (err) {
-      if (document.body.contains(wrap)) document.body.removeChild(wrap);
       console.error('PDF error:', err);
-      showToast('⚠️ Tente salvar a imagem');
+      showToast('⚠️ Erro ao gerar. Tente um screenshot!');
     }
   }
 </script>
