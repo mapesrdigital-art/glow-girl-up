@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Planner IA — Organize sua vida em 1 minuto</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+          onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';document.head.appendChild(s)"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+          onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';document.head.appendChild(s)"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1245,9 +1247,9 @@
   </div>
 
   <div class="action-bar">
-    <button class="btn-outline" onclick="openShare()">📤 Salvar</button>
-    <button class="btn-share" onclick="openShare()">📲 Compartilhar</button>
-    <button class="btn-outline" onclick="downloadPDF()">📄 PDF</button>
+    <button type="button" class="btn-outline" onclick="openShare()">📤 Salvar</button>
+    <button type="button" class="btn-share" onclick="openShare()">📲 Compartilhar</button>
+    <button type="button" class="btn-outline" onclick="downloadPDF()">📄 PDF</button>
   </div>
 </div>
 
@@ -1748,10 +1750,29 @@
   }
 
   function saveImage() {
-    document.getElementById('shareOverlay').classList.remove('active');
-    showToast('📸 Gerando imagem...');
+    try {
+    document.getElementById('shareOverlay')?.classList.remove('active');
 
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    // Se html2canvas não carregou (CDN bloqueado), mostra instrução de screenshot
+    if (typeof html2canvas === 'undefined') {
+      showDownloadModal(`
+        <div style="text-align:center;padding:8px 0;">
+          <div style="font-size:40px;margin-bottom:12px;">📸</div>
+          <div style="font-size:18px;font-weight:800;color:#1A1626;margin-bottom:8px;">Salvar resultado</div>
+          <div style="font-size:14px;color:#7B7491;line-height:1.7;margin-bottom:16px;">
+            Tire um <strong>screenshot</strong> da tela para guardar seu planner!
+          </div>
+          <div style="background:#EDE9FF;border-radius:12px;padding:14px;font-size:13px;color:#6C47FF;text-align:left;">
+            📱 <strong>iPhone:</strong> botão lateral + volume cima<br>
+            🤖 <strong>Android:</strong> volume baixo + botão ligar
+          </div>
+        </div>`);
+      return;
+    }
+
+    showToast('📸 Gerando imagem...');
 
     const captureDiv = document.createElement('div');
     captureDiv.style.cssText = [
@@ -1803,15 +1824,35 @@
         if (document.body.contains(captureDiv)) document.body.removeChild(captureDiv);
         showToast('📸 Tire um screenshot da tela!');
       });
+    } catch(e) {
+      showToast('📸 Tire um screenshot da tela!');
+    }
   }
 
   function downloadPDF() {
-    document.getElementById('shareOverlay').classList.remove('active');
+    try {
+    document.getElementById('shareOverlay')?.classList.remove('active');
 
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     // ── CELULAR: captura o resultado como imagem (funciona em todos os browsers mobile) ──
     if (isMobile) {
+      // Se html2canvas não carregou, instrui screenshot
+      if (typeof html2canvas === 'undefined') {
+        showDownloadModal(`
+          <div style="text-align:center;padding:8px 0;">
+            <div style="font-size:40px;margin-bottom:12px;">📸</div>
+            <div style="font-size:18px;font-weight:800;color:#1A1626;margin-bottom:8px;">Salvar resultado</div>
+            <div style="font-size:14px;color:#7B7491;line-height:1.7;margin-bottom:16px;">
+              Tire um <strong>screenshot</strong> da tela para guardar seu planner!
+            </div>
+            <div style="background:#EDE9FF;border-radius:12px;padding:14px;font-size:13px;color:#6C47FF;text-align:left;">
+              📱 <strong>iPhone:</strong> botão lateral + volume cima<br>
+              🤖 <strong>Android:</strong> volume baixo + botão ligar
+            </div>
+          </div>`);
+        return;
+      }
       showToast('✨ Gerando seu planner...');
       const resultBody = document.getElementById('resultBody');
       if (!resultBody) { showToast('📸 Tire um screenshot da tela!'); return; }
@@ -1965,6 +2006,9 @@
     } catch (err) {
       console.error('PDF error:', err);
       showToast('⚠️ Erro ao gerar. Tente um screenshot!');
+    }
+    } catch(e) {
+      showToast('📸 Tire um screenshot da tela!');
     }
   }
 </script>
