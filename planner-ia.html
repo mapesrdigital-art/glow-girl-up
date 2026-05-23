@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planner IA — Organize sua vida em 1 minuto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FAF9F7;
+      --white: #FFFFFF;
+      --purple: #6C47FF;
+      --purple-light: #EDE9FF;
+      --purple-mid: #9B7FFF;
+      --gold: #F0A500;
+      --gold-light: #FFF8E6;
+      --green: #22C55E;
+      --green-light: #DCFCE7;
+      --text: #1A1626;
+      --muted: #7B7491;
+      --border: #ECEAF5;
+      --card: #FFFFFF;
+      --shadow: 0 4px 24px rgba(108,71,255,0.08);
+      --shadow-lg: 0 12px 48px rgba(108,71,255,0.14);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===================== SCREENS ===================== */
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ===================== LANDING ===================== */
+    #screen-landing {
+      background: linear-gradient(160deg, #EDE9FF 0%, #FAF9F7 45%, #FFF8E6 100%);
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px 60px;
+      text-align: center;
+    }
+
+    .landing-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 28px;
+      box-shadow: 0 2px 12px rgba(108,71,255,0.10);
+    }
+
+    .landing-badge .dot {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .6; transform: scale(1.3); }
+    }
+
+    .landing-title {
+      font-size: clamp(32px, 7vw, 56px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    .landing-title span {
+      background: linear-gradient(135deg, var(--purple), var(--purple-mid));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .landing-sub {
+      font-size: clamp(15px, 3.5vw, 18px);
+      color: var(--muted);
+      font-weight: 400;
+      line-height: 1.65;
+      max-width: 420px;
+      margin: 0 auto 36px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--purple), #8B6CFF);
+      color: #fff;
+      border: none;
+      border-radius: 16px;
+      padding: 18px 36px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(108,71,255,0.35);
+      transition: all 0.25s ease;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: -0.01em;
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(108,71,255,0.45); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .landing-social {
+      margin-top: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .avatars {
+      display: flex;
+    }
+
+    .avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--white);
+      margin-left: -8px;
+      background: linear-gradient(135deg, var(--purple-light), var(--purple-mid));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .avatar:first-child { margin-left: 0; }
+
+    .landing-preview {
+      margin-top: 48px;
+      width: 100%;
+      max-width: 360px;
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg);
+      padding: 24px;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .preview-icon {
+      width: 40px; height: 40px;
+      background: var(--purple-light);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .preview-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .preview-sub { font-size: 12px; color: var(--muted); }
+
+    .preview-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .preview-item:last-child { border-bottom: none; }
+
+    .preview-check {
+      width: 20px; height: 20px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .preview-check.done { background: var(--green-light); color: var(--green); }
+    .preview-check.pending { background: var(--purple-light); color: var(--purple); }
+
+    .preview-text { font-size: 13px; font-weight: 500; color: var(--text); }
+    .preview-time { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+    /* ===================== FORM ===================== */
+    #screen-form {
+      padding: 0;
+      background: var(--bg);
+    }
+
+    .form-header {
+      padding: 24px 24px 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-logo {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--purple);
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--purple-mid));
+      border-radius: 100px;
+      transition: width 0.4s ease;
+    }
+
+    .form-body {
+      flex: 1;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--purple);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .step-question {
+      font-size: clamp(22px, 5vw, 28px);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      text-align: left;
+      width: 100%;
+    }
+
+    .option-btn:hover {
+      border-color: var(--purple-mid);
+      background: var(--purple-light);
+      transform: translateX(4px);
+    }
+
+    .option-btn.selected {
+      border-color: var(--purple);
+      background: var(--purple-light);
+      box-shadow: 0 0 0 4px rgba(108,71,255,0.12);
+    }
+
+    .option-emoji {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .option-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .option-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .option-radio {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      margin-left: auto;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .option-btn.selected .option-radio {
+      border-color: var(--purple);
+      background: var(--purple);
+    }
+
+    .option-btn.selected .option-radio::after {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    .form-footer {
+      padding: 24px;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-next {
+      width: 100%;
+      background: linear-gradient(135deg, var(--purple), #8B6CFF);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 18px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 24px rgba(108,71,255,0.30);
+      letter-spacing: -0.01em;
+    }
+
+    .btn-next:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-next:disabled { opacity: 0.4; transform: none; cursor: not-allowed; }
+
+    /* ===================== LOADING ===================== */
+    #screen-loading {
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #EDE9FF 0%, #FAF9F7 60%, #FFF8E6 100%);
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .loading-icon {
+      font-size: 64px;
+      margin-bottom: 24px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .loading-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .loading-sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+
+    .loading-bar-wrap {
+      width: 220px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .loading-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--purple-mid));
+      border-radius: 100px;
+      animation: loadProgress 2.4s ease-out forwards;
+    }
+
+    @keyframes loadProgress {
+      0% { width: 0%; }
+      30% { width: 40%; }
+      70% { width: 75%; }
+      100% { width: 100%; }
+    }
+
+    .loading-steps {
+      margin-top: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .loading-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.4s ease;
+    }
+
+    .loading-step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .loading-step-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+    }
+
+    /* ===================== RESULT ===================== */
+    #screen-result {
+      background: var(--bg);
+      padding-bottom: 120px;
+    }
+
+    .result-header {
+      background: linear-gradient(135deg, var(--purple), #8B6CFF);
+      padding: 40px 24px 32px;
+      color: white;
+      text-align: center;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .result-title {
+      font-size: clamp(24px, 5vw, 32px);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .result-sub {
+      font-size: 14px;
+      opacity: 0.85;
+      font-weight: 400;
+    }
+
+    .result-body {
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .result-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .card-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .card-icon.purple { background: var(--purple-light); }
+    .card-icon.gold { background: var(--gold-light); }
+    .card-icon.green { background: var(--green-light); }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Routine timeline */
+    .routine-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .routine-item {
+      display: flex;
+      gap: 14px;
+      padding: 10px 0;
+      position: relative;
+    }
+
+    .routine-item::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 38px;
+      bottom: -2px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .routine-item:last-child::before { display: none; }
+
+    .routine-time-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .routine-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--purple);
+      margin-top: 4px;
+      flex-shrink: 0;
+      border: 2px solid var(--purple-light);
+    }
+
+    .routine-content {}
+
+    .routine-time {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--purple);
+      margin-bottom: 2px;
+    }
+
+    .routine-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .routine-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Checklist */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .check-box {
+      width: 22px; height: 22px;
+      border-radius: 7px;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .check-item.checked .check-box {
+      background: var(--purple);
+      border-color: var(--purple);
+    }
+
+    .check-item.checked .check-box::after {
+      content: '✓';
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .check-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .check-item.checked .check-label {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    /* Weekly grid */
+    .week-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .week-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .week-day-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .week-day-num {
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+    }
+
+    .week-day-num.active {
+      background: var(--purple);
+      color: white;
+      border-color: var(--purple);
+    }
+
+    .week-day-num.has-task {
+      border-color: var(--purple-mid);
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+
+    /* Habits */
+    .habits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .habit-card {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 14px;
+      border: 1.5px solid var(--border);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .habit-card:hover { border-color: var(--purple-mid); }
+
+    .habit-emoji { font-size: 22px; margin-bottom: 6px; }
+    .habit-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .habit-freq { font-size: 11px; color: var(--muted); }
+
+    /* Finance */
+    .finance-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .finance-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg);
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+    }
+
+    .finance-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--gold-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    .finance-label { font-size: 14px; font-weight: 600; color: var(--text); }
+    .finance-desc { font-size: 12px; color: var(--muted); }
+
+    /* Goals */
+    .goals-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .goal-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .goal-num {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--purple-light);
+      color: var(--purple);
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .goal-text { font-size: 14px; font-weight: 500; color: var(--text); }
+
+    /* Bottom action bar */
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 16px 20px;
+      display: flex;
+      gap: 10px;
+      box-shadow: 0 -8px 32px rgba(0,0,0,0.06);
+      z-index: 100;
+    }
+
+    .btn-outline {
+      flex: 1;
+      background: var(--bg);
+      color: var(--text);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-outline:hover { border-color: var(--purple-mid); background: var(--purple-light); color: var(--purple); }
+
+    .btn-share {
+      flex: 1.5;
+      background: linear-gradient(135deg, var(--purple), #8B6CFF);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 6px 20px rgba(108,71,255,0.30);
+      transition: all 0.2s;
+    }
+
+    .btn-share:hover { opacity: 0.92; transform: translateY(-1px); }
+
+    /* Share overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,22,38,0.7);
+      display: none;
+      align-items: flex-end;
+      z-index: 200;
+      backdrop-filter: blur(4px);
+    }
+
+    .overlay.active { display: flex; }
+
+    .share-sheet {
+      background: var(--white);
+      border-radius: 24px 24px 0 0;
+      padding: 28px 24px 40px;
+      width: 100%;
+    }
+
+    .share-handle {
+      width: 40px; height: 4px;
+      background: var(--border);
+      border-radius: 100px;
+      margin: 0 auto 24px;
+    }
+
+    .share-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .share-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .share-opt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 16px 8px;
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      transition: all 0.2s;
+      background: var(--bg);
+    }
+
+    .share-opt:hover { border-color: var(--purple-mid); background: var(--purple-light); }
+
+    .share-opt-icon { font-size: 28px; }
+    .share-opt-label { font-size: 12px; font-weight: 600; color: var(--text); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 110px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 300;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Quote card */
+    .quote-card {
+      background: linear-gradient(135deg, var(--purple), #8B6CFF);
+      border-radius: 20px;
+      padding: 24px;
+      color: white;
+      text-align: center;
+    }
+
+    .quote-text {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .quote-author {
+      font-size: 12px;
+      opacity: 0.75;
+    }
+
+    /* Responsive max width */
+    @media (min-width: 600px) {
+      #screen-landing, #screen-loading, #screen-result, #screen-form {
+        max-width: 480px;
+        margin: 0 auto;
+      }
+      .action-bar { max-width: 480px; left: 50%; transform: translateX(-50%); }
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-card { animation: fadeInUp 0.5s ease both; }
+    .result-card:nth-child(1) { animation-delay: 0.05s; }
+    .result-card:nth-child(2) { animation-delay: 0.10s; }
+    .result-card:nth-child(3) { animation-delay: 0.15s; }
+    .result-card:nth-child(4) { animation-delay: 0.20s; }
+    .result-card:nth-child(5) { animation-delay: 0.25s; }
+    .result-card:nth-child(6) { animation-delay: 0.30s; }
+    .result-card:nth-child(7) { animation-delay: 0.35s; }
+  </style>
+</head>
+<body>
+
+<!-- ==================== LANDING ==================== -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-badge">
+    <span class="dot"></span>
+    Planner IA — Beta gratuito
+  </div>
+
+  <h1 class="landing-title">
+    Organize sua vida<br/>em <span>menos de 1 minuto.</span>
+  </h1>
+
+  <p class="landing-sub">
+    Crie uma rotina personalizada, plano financeiro e checklist diário — gerados por IA, só pra você.
+  </p>
+
+  <button class="btn-primary" onclick="goToForm()">
+    ✨ Começar agora — é grátis
+  </button>
+
+  <div class="landing-social">
+    <div class="avatars">
+      <div class="avatar">😊</div>
+      <div class="avatar">🌟</div>
+      <div class="avatar">💜</div>
+    </div>
+    +4.800 pessoas organizando a vida agora
+  </div>
+
+  <div class="landing-preview">
+    <div class="preview-header">
+      <div class="preview-icon">📅</div>
+      <div>
+        <div class="preview-title">Meu Planner de Hoje</div>
+        <div class="preview-sub">Segunda-feira · 4 tarefas</div>
+      </div>
+    </div>
+    <div class="preview-item">
+      <div class="preview-check done">✓</div>
+      <span class="preview-text">Manhã organizada</span>
+      <span class="preview-time">07:00</span>
+    </div>
+    <div class="preview-item">
+      <div class="preview-check done">✓</div>
+      <span class="preview-text">Exercício físico</span>
+      <span class="preview-time">08:00</span>
+    </div>
+    <div class="preview-item">
+      <div class="preview-check pending">→</div>
+      <span class="preview-text">Foco no trabalho</span>
+      <span class="preview-time">09:30</span>
+    </div>
+    <div class="preview-item">
+      <div class="preview-check pending">→</div>
+      <span class="preview-text">Revisar finanças</span>
+      <span class="preview-time">20:00</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== FORM ==================== -->
+<div id="screen-form" class="screen">
+  <div class="form-header">
+    <div class="form-logo">Planner IA ✦</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 25%;"></div>
+    </div>
+  </div>
+
+  <div class="form-body">
+    <!-- Step 1 -->
+    <div class="step active" data-step="1">
+      <div class="step-label">Passo 1 de 4</div>
+      <h2 class="step-question">O que está mais<br/>desorganizado hoje?</h2>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this, 'desorganizado', 'rotina')" data-value="rotina">
+          <span class="option-emoji">🌀</span>
+          <div>
+            <div class="option-text">Minha rotina diária</div>
+            <div class="option-desc">Não consigo manter horários</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'desorganizado', 'dinheiro')" data-value="dinheiro">
+          <span class="option-emoji">💸</span>
+          <div>
+            <div class="option-text">Meu dinheiro</div>
+            <div class="option-desc">Perco o controle financeiro</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'desorganizado', 'produtividade')" data-value="produtividade">
+          <span class="option-emoji">⚡</span>
+          <div>
+            <div class="option-text">Minha produtividade</div>
+            <div class="option-desc">Procrastino demais</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'desorganizado', 'habitos')" data-value="habitos">
+          <span class="option-emoji">🔄</span>
+          <div>
+            <div class="option-text">Meus hábitos</div>
+            <div class="option-desc">Começo e abandono tudo</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'desorganizado', 'tudo')" data-value="tudo">
+          <span class="option-emoji">🌪️</span>
+          <div>
+            <div class="option-text">Tudo acima</div>
+            <div class="option-desc">A vida toda tá um caos</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step" data-step="2">
+      <div class="step-label">Passo 2 de 4</div>
+      <h2 class="step-question">Qual é o seu<br/>maior objetivo?</h2>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this, 'objetivo', 'economizar')" data-value="economizar">
+          <span class="option-emoji">💰</span>
+          <div>
+            <div class="option-text">Economizar dinheiro</div>
+            <div class="option-desc">Quero guardar todo mês</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'objetivo', 'disciplina')" data-value="disciplina">
+          <span class="option-emoji">🧠</span>
+          <div>
+            <div class="option-text">Criar disciplina</div>
+            <div class="option-desc">Quero ser mais consistente</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'objetivo', 'ansiedade')" data-value="ansiedade">
+          <span class="option-emoji">🧘</span>
+          <div>
+            <div class="option-text">Reduzir ansiedade</div>
+            <div class="option-desc">Me sentir mais leve</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'objetivo', 'produtividade')" data-value="produtividade">
+          <span class="option-emoji">🚀</span>
+          <div>
+            <div class="option-text">Aumentar produtividade</div>
+            <div class="option-desc">Fazer mais em menos tempo</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'objetivo', 'rotina')" data-value="rotina">
+          <span class="option-emoji">✅</span>
+          <div>
+            <div class="option-text">Organizar minha rotina</div>
+            <div class="option-desc">Ter clareza no meu dia</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step" data-step="3">
+      <div class="step-label">Passo 3 de 4</div>
+      <h2 class="step-question">Quanto tempo você<br/>tem por dia?</h2>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this, 'tempo', '15')" data-value="15">
+          <span class="option-emoji">⏱️</span>
+          <div>
+            <div class="option-text">15 minutos</div>
+            <div class="option-desc">Tenho pouco tempo livre</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'tempo', '30')" data-value="30">
+          <span class="option-emoji">⏰</span>
+          <div>
+            <div class="option-text">30 minutos</div>
+            <div class="option-desc">Tenho algum tempo disponível</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'tempo', '60')" data-value="60">
+          <span class="option-emoji">🕐</span>
+          <div>
+            <div class="option-text">1 hora ou mais</div>
+            <div class="option-desc">Tenho bastante tempo livre</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step" data-step="4">
+      <div class="step-label">Passo 4 de 4</div>
+      <h2 class="step-question">Qual estilo de rotina<br/>combina com você?</h2>
+      <div class="options-grid">
+        <button class="option-btn" onclick="selectOption(this, 'estilo', 'leve')" data-value="leve">
+          <span class="option-emoji">🌸</span>
+          <div>
+            <div class="option-text">Leve e suave</div>
+            <div class="option-desc">Sem pressão, no meu ritmo</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'estilo', 'equilibrada')" data-value="equilibrada">
+          <span class="option-emoji">⚖️</span>
+          <div>
+            <div class="option-text">Equilibrada</div>
+            <div class="option-desc">Produtiva mas com pausas</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+        <button class="option-btn" onclick="selectOption(this, 'estilo', 'intensa')" data-value="intensa">
+          <span class="option-emoji">🔥</span>
+          <div>
+            <div class="option-text">Intensa e focada</div>
+            <div class="option-desc">Quero resultados rápidos</div>
+          </div>
+          <div class="option-radio"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <button class="btn-next" id="btnNext" onclick="nextStep()" disabled>
+      Continuar →
+    </button>
+  </div>
+</div>
+
+
+<!-- ==================== LOADING ==================== -->
+<div id="screen-loading" class="screen">
+  <div class="loading-icon">🤖</div>
+  <div class="loading-title">Criando seu planner...</div>
+  <div class="loading-sub">A IA está personalizando tudo pra você</div>
+  <div class="loading-bar-wrap">
+    <div class="loading-bar-fill" id="loadBar"></div>
+  </div>
+  <div class="loading-steps">
+    <div class="loading-step" id="ls1"><span class="loading-step-dot"></span>Analisando seu perfil...</div>
+    <div class="loading-step" id="ls2"><span class="loading-step-dot"></span>Criando rotina personalizada...</div>
+    <div class="loading-step" id="ls3"><span class="loading-step-dot"></span>Organizando hábitos e metas...</div>
+    <div class="loading-step" id="ls4"><span class="loading-step-dot"></span>Gerando plano financeiro...</div>
+    <div class="loading-step" id="ls5"><span class="loading-step-dot"></span>Seu planner está pronto! ✨</div>
+  </div>
+</div>
+
+
+<!-- ==================== RESULT ==================== -->
+<div id="screen-result" class="screen">
+  <div class="result-header">
+    <div class="result-badge">✨ Planner gerado pela IA</div>
+    <div class="result-title" id="resultTitle">Seu planner está pronto!</div>
+    <div class="result-sub" id="resultSub">Personalizado especialmente para você</div>
+  </div>
+
+  <div class="result-body" id="resultBody">
+    <!-- Conteúdo gerado dinamicamente -->
+  </div>
+
+  <div class="action-bar">
+    <button class="btn-outline" onclick="openShare()">📤 Salvar</button>
+    <button class="btn-share" onclick="openShare()">📲 Compartilhar</button>
+    <button class="btn-outline" onclick="downloadPDF()">📄 PDF</button>
+  </div>
+</div>
+
+<!-- Share overlay -->
+<div class="overlay" id="shareOverlay" onclick="closeShare(event)">
+  <div class="share-sheet">
+    <div class="share-handle"></div>
+    <div class="share-title">Compartilhar seu planner</div>
+    <div class="share-options">
+      <div class="share-opt" onclick="shareWhatsApp()">
+        <span class="share-opt-icon">💬</span>
+        <span class="share-opt-label">WhatsApp</span>
+      </div>
+      <div class="share-opt" onclick="saveImage()">
+        <span class="share-opt-icon">🖼️</span>
+        <span class="share-opt-label">Salvar imagem</span>
+      </div>
+      <div class="share-opt" onclick="copyLink()">
+        <span class="share-opt-icon">🔗</span>
+        <span class="share-opt-label">Copiar link</span>
+      </div>
+      <div class="share-opt" onclick="shareInstagram()">
+        <span class="share-opt-icon">📸</span>
+        <span class="share-opt-label">Instagram</span>
+      </div>
+      <div class="share-opt" onclick="downloadPDF()">
+        <span class="share-opt-icon">📄</span>
+        <span class="share-opt-label">Baixar PDF</span>
+      </div>
+      <div class="share-opt" onclick="shareGeneric()">
+        <span class="share-opt-icon">➕</span>
+        <span class="share-opt-label">Mais</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ==================== STATE ====================
+  let currentStep = 1;
+  const totalSteps = 4;
+  const answers = {};
+
+  // ==================== NAV ====================
+  function goToForm() {
+    showScreen('screen-form');
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function selectOption(btn, key, value) {
+    const step = btn.closest('.step');
+    step.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    answers[key] = value;
+    document.getElementById('btnNext').disabled = false;
+  }
+
+  function nextStep() {
+    if (currentStep < totalSteps) {
+      document.querySelector(`.step[data-step="${currentStep}"]`).classList.remove('active');
+      currentStep++;
+      document.querySelector(`.step[data-step="${currentStep}"]`).classList.add('active');
+      document.getElementById('progressFill').style.width = (currentStep / totalSteps * 100) + '%';
+      document.getElementById('btnNext').disabled = true;
+
+      if (currentStep === totalSteps) {
+        document.getElementById('btnNext').textContent = '✨ Gerar meu planner';
+      }
+    } else {
+      generatePlanner();
+    }
+  }
+
+  // ==================== LOADING ====================
+  function generatePlanner() {
+    showScreen('screen-loading');
+    // Reset loading bar
+    const bar = document.getElementById('loadBar');
+    bar.style.animation = 'none';
+    bar.offsetHeight;
+    bar.style.animation = '';
+
+    const steps = [1, 2, 3, 4, 5].map(i => document.getElementById('ls' + i));
+    steps.forEach(s => s.classList.remove('visible'));
+
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < steps.length) {
+        steps[i].classList.add('visible');
+        i++;
+      } else {
+        clearInterval(interval);
+        setTimeout(() => {
+          buildResult();
+          showScreen('screen-result');
+        }, 400);
+      }
+    }, 480);
+  }
+
+  // ==================== PLANNER DATA ====================
+  const plannerData = {
+    routines: {
+      leve: [
+        { time: '07:00', label: 'Acorde com calma', desc: '5 min de alongamento ou respiração profunda' },
+        { time: '07:30', label: 'Café da manhã consciente', desc: 'Sem telas, só você e o momento' },
+        { time: '09:00', label: 'Tarefa principal do dia', desc: 'Uma coisa importante, sem multitarefas' },
+        { time: '12:00', label: 'Pausa para o almoço', desc: 'Descanse a mente, coma sem pressa' },
+        { time: '15:00', label: 'Revisão rápida', desc: '10 min para organizar o que falta' },
+        { time: '20:00', label: 'Encerramento tranquilo', desc: 'Journaling ou leitura leve' },
+      ],
+      equilibrada: [
+        { time: '06:30', label: 'Acorde e hidrate', desc: '1 copo d\'água + 5 min de intenção do dia' },
+        { time: '07:00', label: 'Exercício ou caminhada', desc: '20-30 min de movimento físico' },
+        { time: '08:00', label: 'Deep work — bloco 1', desc: 'Foco total na tarefa mais importante' },
+        { time: '12:00', label: 'Almoço + descanso', desc: 'Recarregue a energia para a tarde' },
+        { time: '14:00', label: 'Deep work — bloco 2', desc: 'Segundo ciclo de foco e entrega' },
+        { time: '18:00', label: 'Finanças e planejamento', desc: 'Revisar gastos e organizar amanhã' },
+        { time: '21:00', label: 'Hora de descansar', desc: 'Sem telas 1h antes de dormir' },
+      ],
+      intensa: [
+        { time: '05:30', label: 'Acorde e conquiste o dia', desc: 'Os primeiros a acordar têm vantagem' },
+        { time: '06:00', label: 'Treino + frio + energia', desc: 'Exercício intenso para ativar o corpo' },
+        { time: '07:00', label: 'Planejamento do dia', desc: 'Definir as 3 tarefas que mudam tudo' },
+        { time: '08:00', label: 'Deep work — 2h de foco', desc: 'Zero distrações, modo avião' },
+        { time: '10:00', label: 'Revisão + comunicação', desc: 'Responder mensagens e e-mails' },
+        { time: '14:00', label: 'Segundo bloco produtivo', desc: '2h de entrega máxima' },
+        { time: '19:00', label: 'Revisão de metas', desc: 'O que fiz hoje que me aproximou do objetivo?' },
+        { time: '21:00', label: 'Descanso programado', desc: 'Recuperação é parte do sistema' },
+      ]
+    },
+    habits: {
+      economizar: [
+        { emoji: '💰', name: 'Regra dos 24h', freq: 'Antes de comprar algo' },
+        { emoji: '📊', name: 'Anotar gastos', freq: 'Todo dia' },
+        { emoji: '🎯', name: 'Meta de economia', freq: 'Revisão semanal' },
+        { emoji: '🚫', name: 'Dia sem gastar', freq: '2x por semana' },
+      ],
+      disciplina: [
+        { emoji: '⏰', name: 'Horário fixo pra acordar', freq: 'Todo dia' },
+        { emoji: '📋', name: 'Lista de 3 prioridades', freq: 'Toda manhã' },
+        { emoji: '📵', name: 'Sem celular 1h ao acordar', freq: 'Todo dia' },
+        { emoji: '✍️', name: 'Journaling noturno', freq: 'Toda noite' },
+      ],
+      ansiedade: [
+        { emoji: '🧘', name: 'Respiração 4-7-8', freq: 'Quando sentir tensão' },
+        { emoji: '🚶', name: 'Caminhada ao ar livre', freq: '20 min diários' },
+        { emoji: '📵', name: 'Detox digital', freq: '1 hora/dia sem telas' },
+        { emoji: '📖', name: 'Leitura antes de dormir', freq: 'Toda noite' },
+      ],
+      produtividade: [
+        { emoji: '🍅', name: 'Técnica Pomodoro', freq: '25 min foco + 5 pausa' },
+        { emoji: '📵', name: 'Modo foco no celular', freq: 'Durante deep work' },
+        { emoji: '📋', name: 'Big 3 do dia', freq: 'Toda manhã' },
+        { emoji: '🌙', name: 'Planejar amanhã', freq: 'Toda noite' },
+      ],
+      rotina: [
+        { emoji: '⏰', name: 'Acordar no mesmo horário', freq: 'Todo dia' },
+        { emoji: '🥗', name: 'Refeições programadas', freq: '3x ao dia' },
+        { emoji: '📅', name: 'Revisão semanal', freq: 'Domingo à noite' },
+        { emoji: '🏃', name: 'Movimento diário', freq: '30 min' },
+      ]
+    },
+    finance: {
+      economizar: [
+        { emoji: '💰', label: 'Regra 50/30/20', desc: '50% necessidades · 30% lazer · 20% poupança' },
+        { emoji: '📊', label: 'Registrar todo gasto', desc: 'Use uma planilha ou app simples' },
+        { emoji: '🎯', label: 'Meta de economia mensal', desc: 'Defina um valor fixo para guardar' },
+        { emoji: '✂️', label: 'Cortar 1 assinatura', desc: 'Revise o que você não usa mais' },
+      ],
+      default: [
+        { emoji: '📋', label: 'Lista de gastos fixos', desc: 'Mapeie o que sai todo mês' },
+        { emoji: '🎯', label: 'Fundo de emergência', desc: 'Meta: 3 meses do seu custo de vida' },
+        { emoji: '💳', label: 'Evitar parcelamentos', desc: 'Pague à vista sempre que possível' },
+        { emoji: '📈', label: 'Investimento automático', desc: 'Configure débito automático pra investir' },
+      ]
+    },
+    goals: {
+      economizar: ['Guardar R$ ___/mês durante 3 meses', 'Quitar 1 dívida pendente', 'Criar fundo de emergência', 'Revisão mensal de gastos'],
+      disciplina: ['Manter rotina por 21 dias seguidos', 'Completar 1 hábito por 30 dias', 'Ler 1 livro por mês', 'Reduzir tempo de tela em 50%'],
+      ansiedade: ['Meditar 5 min por dia durante 14 dias', 'Fazer 1 caminhada ao dia por 21 dias', 'Fazer 1 detox digital por semana', 'Dormir 7-8h por noite'],
+      produtividade: ['Completar as 3 prioridades do dia', 'Fazer 2h de deep work diário', 'Eliminar 1 distração digital', 'Entregar 1 projeto importante por semana'],
+      rotina: ['Acordar no mesmo horário por 14 dias', 'Planejar a semana todo domingo', 'Completar checklist diário', 'Manter rotina noturna por 21 dias'],
+    },
+    quotes: {
+      leve: '"A disciplina não é rigidez. É gentileza consigo mesmo, todos os dias."',
+      equilibrada: '"O segredo da mudança é focar toda sua energia não em lutar contra o velho, mas em construir o novo."',
+      intensa: '"Enquanto você dorme, os seus sonhos ficam acordados esperando por você."',
+    },
+    checklist: {
+      15: ['☀️ Acordar no horário planejado', '💧 Tomar 1 copo d\'água ao acordar', '📋 Revisar a tarefa principal do dia', '🎯 Completar 1 ação pequena importante', '🌙 Revisar o dia antes de dormir'],
+      30: ['☀️ Acordar no horário planejado', '💧 Hidratação matinal + vitaminas', '🏃 15 min de movimento físico', '📋 Definir as 3 prioridades do dia', '🎯 Completar as 3 prioridades', '💰 Registrar 1 gasto do dia', '🌙 Planejar o dia seguinte'],
+      60: ['☀️ Acordar no horário planejado', '🏋️ Exercício completo (30 min)', '💧 2L de água ao longo do dia', '📋 Planejar o dia com detalhes', '🎯 Bloco de deep work (1h)', '💰 Revisar finanças do dia', '📚 Leitura ou aprendizado (15 min)', '🌙 Journaling noturno + plano amanhã'],
+    }
+  };
+
+  // ==================== BUILD RESULT ====================
+  function buildResult() {
+    const { desorganizado, objetivo, tempo, estilo } = answers;
+    const estilo_ = estilo || 'equilibrada';
+    const objetivo_ = objetivo || 'rotina';
+    const tempo_ = tempo || '30';
+
+    // Header personalizado
+    const titles = {
+      economizar: '💰 Seu planner financeiro está pronto!',
+      disciplina: '🧠 Sua rotina de disciplina está criada!',
+      ansiedade: '🧘 Seu planner de leveza está aqui!',
+      produtividade: '🚀 Sua máquina de produtividade está no ar!',
+      rotina: '✅ Sua rotina organizada está pronta!',
+    };
+
+    document.getElementById('resultTitle').textContent = titles[objetivo_] || '✨ Seu planner está pronto!';
+    document.getElementById('resultSub').textContent = `Rotina ${estilo_} · ${tempo_} min/dia de foco`;
+
+    const routine = plannerData.routines[estilo_] || plannerData.routines.equilibrada;
+    const habits = plannerData.habits[objetivo_] || plannerData.habits.rotina;
+    const financeKey = objetivo_ === 'economizar' ? 'economizar' : 'default';
+    const finance = plannerData.finance[financeKey];
+    const goals = plannerData.goals[objetivo_] || plannerData.goals.rotina;
+    const checklist = plannerData.checklist[tempo_] || plannerData.checklist['30'];
+    const quote = plannerData.quotes[estilo_] || plannerData.quotes.equilibrada;
+
+    // Today weekday
+    const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+    const today = new Date().getDay();
+    const todayDate = new Date().getDate();
+
+    const html = `
+      <!-- Quote -->
+      <div class="quote-card result-card">
+        <div class="quote-text">${quote}</div>
+        <div class="quote-author">— Seu planner personalizado</div>
+      </div>
+
+      <!-- Rotina diária -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon purple">🌅</div>
+          <div>
+            <div class="card-title">Rotina Diária — Estilo ${capitalise(estilo_)}</div>
+            <div class="card-subtitle">${routine.length} blocos · personalizado pela IA</div>
+          </div>
+        </div>
+        <div class="routine-list">
+          ${routine.map(r => `
+            <div class="routine-item">
+              <div class="routine-time-col"><div class="routine-dot"></div></div>
+              <div class="routine-content">
+                <div class="routine-time">${r.time}</div>
+                <div class="routine-label">${r.label}</div>
+                <div class="routine-desc">${r.desc}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Checklist diário -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon green">✅</div>
+          <div>
+            <div class="card-title">Checklist de Hoje</div>
+            <div class="card-subtitle">${checklist.length} tarefas · ${tempo_} min de foco</div>
+          </div>
+        </div>
+        <div class="checklist" id="dailyChecklist">
+          ${checklist.map((item, i) => `
+            <div class="check-item" onclick="toggleCheck(this)" data-i="${i}">
+              <div class="check-box"></div>
+              <span class="check-label">${item}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Semana -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon purple">📅</div>
+          <div>
+            <div class="card-title">Plano Semanal</div>
+            <div class="card-subtitle">Seus dias organizados visualmente</div>
+          </div>
+        </div>
+        <div class="week-grid">
+          ${days.map((d, i) => {
+            const num = todayDate - today + i;
+            const cls = i === today ? 'active' : (Math.abs(i - today) <= 2 ? 'has-task' : '');
+            return `<div class="week-day">
+              <div class="week-day-label">${d}</div>
+              <div class="week-day-num ${cls}">${num > 0 ? num : ''}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="margin-top:16px; display:flex; flex-direction:column; gap:10px;">
+          ${getWeeklyTasks(objetivo_, estilo_).map(t => `
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border-radius:12px;border:1.5px solid var(--border)">
+              <span style="font-size:18px;">${t.emoji}</span>
+              <div>
+                <div style="font-size:13px;font-weight:600;color:var(--text)">${t.task}</div>
+                <div style="font-size:11px;color:var(--muted)">${t.day}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Hábitos -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon gold">🔄</div>
+          <div>
+            <div class="card-title">Hábitos Recomendados</div>
+            <div class="card-subtitle">Selecionados para seu objetivo</div>
+          </div>
+        </div>
+        <div class="habits-grid">
+          ${habits.map(h => `
+            <div class="habit-card">
+              <div class="habit-emoji">${h.emoji}</div>
+              <div class="habit-name">${h.name}</div>
+              <div class="habit-freq">${h.freq}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Finanças -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon gold">💰</div>
+          <div>
+            <div class="card-title">Organização Financeira</div>
+            <div class="card-subtitle">4 passos simples para começar</div>
+          </div>
+        </div>
+        <div class="finance-items">
+          ${finance.map(f => `
+            <div class="finance-item">
+              <div class="finance-icon">${f.emoji}</div>
+              <div>
+                <div class="finance-label">${f.label}</div>
+                <div class="finance-desc">${f.desc}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Metas -->
+      <div class="result-card">
+        <div class="card-header">
+          <div class="card-icon purple">🎯</div>
+          <div>
+            <div class="card-title">Suas Mini Metas</div>
+            <div class="card-subtitle">Foque em uma de cada vez</div>
+          </div>
+        </div>
+        <div class="goals-list">
+          ${goals.map((g, i) => `
+            <div class="goal-item">
+              <div class="goal-num">${i + 1}</div>
+              <div class="goal-text">${g}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Motivational footer -->
+      <div style="text-align:center; padding: 12px 0 8px;">
+        <div style="font-size:12px;color:var(--muted);">Criado com ✦ Planner IA · Grátis por tempo limitado</div>
+      </div>
+    `;
+
+    document.getElementById('resultBody').innerHTML = html;
+  }
+
+  function getWeeklyTasks(objetivo, estilo) {
+    const tasks = {
+      economizar: [
+        { emoji: '📊', task: 'Revisar gastos da semana', day: 'Segunda-feira' },
+        { emoji: '🛒', task: 'Lista de compras planejada', day: 'Quarta-feira' },
+        { emoji: '💰', task: 'Registrar economias', day: 'Sexta-feira' },
+        { emoji: '📈', task: 'Balanço financeiro mensal', day: 'Domingo' },
+      ],
+      disciplina: [
+        { emoji: '📋', task: 'Planejamento semanal', day: 'Domingo' },
+        { emoji: '🔄', task: 'Revisar hábitos', day: 'Quarta-feira' },
+        { emoji: '✅', task: 'Checklist de progresso', day: 'Sexta-feira' },
+        { emoji: '🧠', task: 'Reflexão da semana', day: 'Domingo' },
+      ],
+      ansiedade: [
+        { emoji: '🧘', task: 'Meditação guiada 10 min', day: 'Segunda e quinta' },
+        { emoji: '🚶', task: 'Caminhada ao ar livre', day: 'Terça e sexta' },
+        { emoji: '📖', task: 'Leitura relaxante', day: 'Toda noite' },
+        { emoji: '📵', task: 'Detox digital', day: 'Sábado' },
+      ],
+      produtividade: [
+        { emoji: '🎯', task: 'Definir Big 3 da semana', day: 'Domingo' },
+        { emoji: '⚡', task: 'Bloco de deep work 2h', day: 'Segunda a sexta' },
+        { emoji: '📊', task: 'Revisão de progresso', day: 'Sexta-feira' },
+        { emoji: '🔄', task: 'Retrospectiva semanal', day: 'Domingo' },
+      ],
+      rotina: [
+        { emoji: '📅', task: 'Planejar a semana', day: 'Domingo' },
+        { emoji: '✅', task: 'Revisar checklist', day: 'Toda manhã' },
+        { emoji: '🌙', task: 'Encerramento diário', day: 'Toda noite' },
+        { emoji: '📊', task: 'Balanço semanal', day: 'Sexta-feira' },
+      ],
+    };
+    return tasks[objetivo] || tasks.rotina;
+  }
+
+  function capitalise(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  // ==================== INTERACTIONS ====================
+  function toggleCheck(el) {
+    el.classList.toggle('checked');
+  }
+
+  function openShare() {
+    document.getElementById('shareOverlay').classList.add('active');
+  }
+
+  function closeShare(e) {
+    if (e.target === document.getElementById('shareOverlay')) {
+      document.getElementById('shareOverlay').classList.remove('active');
+    }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+    document.getElementById('shareOverlay').classList.remove('active');
+  }
+
+  function shareWhatsApp() {
+    const text = encodeURIComponent('✨ Acabei de criar meu Planner IA! Organize sua vida em menos de 1 minuto → plannerIA.app');
+    window.open('https://wa.me/?text=' + text, '_blank');
+    showToast('Abrindo WhatsApp...');
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText('https://plannerIA.app').then(() => {
+      showToast('✅ Link copiado!');
+    }).catch(() => {
+      showToast('🔗 plannerIA.app');
+    });
+  }
+
+  function shareInstagram() {
+    showToast('📸 Salve a imagem e compartilhe nos stories!');
+    saveImage();
+  }
+
+  function shareGeneric() {
+    if (navigator.share) {
+      navigator.share({
+        title: 'Meu Planner IA',
+        text: '✨ Organizei minha vida em menos de 1 minuto com o Planner IA!',
+        url: 'https://plannerIA.app'
+      });
+    } else {
+      copyLink();
+    }
+  }
+
+  function saveImage() {
+    document.getElementById('shareOverlay').classList.remove('active');
+    showToast('📸 Gerando imagem...');
+
+    const resultHeader = document.querySelector('.result-header');
+    const firstCards = document.querySelectorAll('.result-card');
+
+    // Create a capture div
+    const captureDiv = document.createElement('div');
+    captureDiv.style.cssText = `
+      position: fixed; top: -9999px; left: 0;
+      width: 375px; background: #FAF9F7;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 0 0 24px 0; border-radius: 0;
+    `;
+
+    captureDiv.innerHTML = `
+      <div style="background:linear-gradient(135deg,#6C47FF,#8B6CFF);padding:32px 24px;color:white;text-align:center;">
+        <div style="font-size:22px;font-weight:800;margin-bottom:6px;">✨ Meu Planner IA</div>
+        <div style="font-size:13px;opacity:0.85;">Gerado especialmente para mim</div>
+      </div>
+      <div style="padding:16px 16px 0;">
+        ${document.querySelector('.result-card').outerHTML}
+        ${document.querySelectorAll('.result-card')[2]?.outerHTML || ''}
+      </div>
+      <div style="text-align:center;padding:16px 0 0;font-size:11px;color:#7B7491;">✦ plannerIA.app — Grátis por tempo limitado</div>
+    `;
+
+    document.body.appendChild(captureDiv);
+
+    html2canvas(captureDiv, {
+      backgroundColor: '#FAF9F7',
+      scale: 2,
+      useCORS: true,
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'meu-planner-ia.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      document.body.removeChild(captureDiv);
+      showToast('✅ Imagem salva!');
+    }).catch(() => {
+      document.body.removeChild(captureDiv);
+      showToast('📸 Salve um screenshot da tela!');
+    });
+  }
+
+  async function downloadPDF() {
+    document.getElementById('shareOverlay').classList.remove('active');
+    showToast('📄 Gerando PDF...');
+
+    const { objetivo, estilo, tempo } = answers;
+    const obj = objetivo || 'rotina';
+    const est = estilo || 'equilibrada';
+    const tmp = tempo || '30';
+
+    const routine = plannerData.routines[est] || plannerData.routines.equilibrada;
+    const habits = plannerData.habits[obj] || plannerData.habits.rotina;
+    const finKey = obj === 'economizar' ? 'economizar' : 'default';
+    const finance = plannerData.finance[finKey];
+    const goals = plannerData.goals[obj] || plannerData.goals.rotina;
+    const checklist = plannerData.checklist[tmp] || plannerData.checklist['30'];
+    const date = new Date().toLocaleDateString('pt-BR');
+
+    // Cria div oculto com layout do PDF
+    const wrap = document.createElement('div');
+    wrap.style.cssText = [
+      'position:fixed', 'top:-9999px', 'left:0',
+      'width:794px',   // A4 em 96dpi ≈ 794px
+      'background:#FAF9F7',
+      'font-family:\'Plus Jakarta Sans\',sans-serif',
+      'color:#1A1626',
+      'padding:48px 56px 64px',
+      'line-height:1.6',
+      'box-sizing:border-box'
+    ].join(';');
+
+    wrap.innerHTML = `
+      <!-- Cabeçalho -->
+      <div style="background:linear-gradient(135deg,#6C47FF,#8B6CFF);border-radius:16px;padding:32px 36px;color:#fff;margin-bottom:32px;">
+        <div style="font-size:28px;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px;">✦ Meu Planner IA</div>
+        <div style="font-size:14px;opacity:0.85;">Rotina ${capitalise(est)} · ${tmp} min de foco diário · Gerado em ${date}</div>
+      </div>
+
+      <!-- Rotina -->
+      <div style="margin-bottom:28px;">
+        <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">🌅 Rotina Diária</div>
+        ${routine.map(r => `
+          <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;">
+            <span style="background:#EDE9FF;color:#6C47FF;border-radius:8px;padding:4px 12px;font-size:12px;font-weight:700;white-space:nowrap;margin-top:2px;">${r.time}</span>
+            <div>
+              <div style="font-size:14px;font-weight:700;">${r.label}</div>
+              <div style="font-size:13px;color:#7B7491;">${r.desc}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <!-- Checklist -->
+      <div style="margin-bottom:28px;">
+        <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">✅ Checklist Diário</div>
+        ${checklist.map(c => `
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+            <span style="width:20px;height:20px;border-radius:6px;border:2px solid #ECEAF5;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;"></span>
+            <span style="font-size:14px;">${c}</span>
+          </div>`).join('')}
+      </div>
+
+      <!-- Hábitos + Finanças (2 colunas) -->
+      <div style="display:flex;gap:24px;margin-bottom:28px;">
+        <div style="flex:1;">
+          <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">🔄 Hábitos</div>
+          ${habits.map(h => `
+            <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;">
+              <span style="font-size:18px;">${h.emoji}</span>
+              <div>
+                <div style="font-size:13px;font-weight:700;">${h.name}</div>
+                <div style="font-size:12px;color:#7B7491;">${h.freq}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">💰 Finanças</div>
+          ${finance.map(f => `
+            <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;">
+              <span style="font-size:18px;">${f.emoji}</span>
+              <div>
+                <div style="font-size:13px;font-weight:700;">${f.label}</div>
+                <div style="font-size:12px;color:#7B7491;">${f.desc}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Metas -->
+      <div style="margin-bottom:36px;">
+        <div style="font-size:17px;font-weight:800;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid #ECEAF5;">🎯 Suas Mini Metas</div>
+        ${goals.map((g, i) => `
+          <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;">
+            <span style="background:#EDE9FF;color:#6C47FF;border-radius:8px;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;">${i+1}</span>
+            <span style="font-size:14px;">${g}</span>
+          </div>`).join('')}
+      </div>
+
+      <!-- Rodapé -->
+      <div style="text-align:center;padding-top:20px;border-top:1px solid #ECEAF5;font-size:12px;color:#7B7491;">
+        ✦ Planner IA — Comece hoje, mude sua vida.
+      </div>
+    `;
+
+    document.body.appendChild(wrap);
+
+    try {
+      const canvas = await html2canvas(wrap, {
+        backgroundColor: '#FAF9F7',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+      document.body.removeChild(wrap);
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      const pdfW = pdf.internal.pageSize.getWidth();
+      const pdfH = pdf.internal.pageSize.getHeight();
+      const ratio = canvas.height / canvas.width;
+      const imgH = pdfW * ratio;
+
+      // Divide em páginas se o conteúdo for maior que uma página A4
+      let posY = 0;
+      let remaining = imgH;
+      let pageNum = 0;
+
+      while (remaining > 0) {
+        if (pageNum > 0) pdf.addPage();
+
+        const sliceH = Math.min(remaining, pdfH);
+        const srcY = pageNum * pdfH * (canvas.height / imgH);
+        const srcH = sliceH * (canvas.height / imgH);
+
+        const sliceCanvas = document.createElement('canvas');
+        sliceCanvas.width = canvas.width;
+        sliceCanvas.height = srcH;
+        const sliceCtx = sliceCanvas.getContext('2d');
+        sliceCtx.drawImage(canvas, 0, srcY, canvas.width, srcH, 0, 0, canvas.width, srcH);
+
+        pdf.addImage(sliceCanvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, pdfW, sliceH);
+
+        remaining -= pdfH;
+        pageNum++;
+      }
+
+      pdf.save('meu-planner-ia.pdf');
+      showToast('✅ PDF baixado com sucesso!');
+    } catch (err) {
+      if (document.body.contains(wrap)) document.body.removeChild(wrap);
+      console.error('PDF error:', err);
+      showToast('⚠️ Tente salvar a imagem');
+    }
+  }
+</script>
+</body>
+</html>
