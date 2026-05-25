@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Planner IA — Organize sua vida em 1 minuto</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
-          onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';document.head.appendChild(s)"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
           onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';document.head.appendChild(s)"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1247,9 +1246,8 @@
   </div>
 
   <div class="action-bar">
-    <button type="button" class="btn-outline" onclick="openShare()">📤 Salvar</button>
-    <button type="button" class="btn-share" onclick="openShare()">📲 Compartilhar</button>
-    <button type="button" class="btn-outline" onclick="downloadPDF()">📄 PDF</button>
+    <button type="button" class="btn-share" onclick="openEmailModal()">📧 Receber por Email</button>
+    <button type="button" class="btn-outline" onclick="downloadPDF()">📄 PDF (PC)</button>
   </div>
 </div>
 
@@ -1295,6 +1293,23 @@
   let currentStep = 1;
   const totalSteps = 4;
   const answers = {};
+
+  // ── Detecta link personalizado (?r=...) ───────────────────────
+  (function checkPlannerLink() {
+    try {
+      const param = new URLSearchParams(window.location.search).get('r');
+      if (!param) return;
+      const decoded = JSON.parse(decodeURIComponent(escape(atob(param))));
+      Object.assign(answers, decoded);
+      // Aguarda DOM + plannerData prontos antes de mostrar resultado
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          buildResult();
+          showScreen('screen-result');
+        }, 100);
+      });
+    } catch (e) { /* link inválido — ignora */ }
+  })();
 
   // ==================== NAV ====================
   function goToForm() {
@@ -1735,6 +1750,97 @@
   const IS_INSTAGRAM = /Instagram/.test(navigator.userAgent);
   const IS_MOBILE    = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+  // ── EmailJS config ────────────────────────────────────────────
+  const EJS_SERVICE  = 'service_5y0mlvu';
+  const EJS_TEMPLATE = 'template_ysoi6qg';
+  const EJS_KEY      = 'vBhz7wIr0oalQCX63';
+
+  // ── Modal Email ───────────────────────────────────────────────
+  function openEmailModal() {
+    const old = document.getElementById('emailModal');
+    if (old) old.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'emailModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.55);display:flex;align-items:flex-end;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:#fff;border-radius:24px 24px 0 0;padding:24px 20px 44px;width:100%;max-width:500px;box-sizing:border-box;">
+        <div style="text-align:right;margin-bottom:8px;">
+          <button type="button" onclick="document.getElementById('emailModal').remove()" style="background:#f0f0f0;border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;color:#555;line-height:1;">✕</button>
+        </div>
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:40px;margin-bottom:8px;">💌</div>
+          <h3 style="margin:0 0 6px;font-size:20px;color:#1a1a1a;font-family:inherit;">Receber seu Planner</h3>
+          <p style="margin:0;font-size:14px;color:#666;line-height:1.5;">Insira seu email e vamos enviar<br>o PDF personalizado direto para você!</p>
+        </div>
+        <input
+          id="emailInput"
+          type="email"
+          placeholder="seu@email.com"
+          style="width:100%;box-sizing:border-box;padding:14px 16px;border:2px solid #e8e8e8;border-radius:14px;font-size:16px;outline:none;margin-bottom:12px;font-family:inherit;transition:border-color .2s;"
+          onfocus="this.style.borderColor='#d4a8c7'"
+          onblur="this.style.borderColor='#e8e8e8'"
+        />
+        <button
+          type="button"
+          id="emailSendBtn"
+          onclick="sendPlannerByEmail()"
+          style="width:100%;padding:16px;background:linear-gradient(135deg,#e8b4d0,#c9a0dc);border:none;border-radius:14px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;letter-spacing:.3px;font-family:inherit;"
+        >Enviar meu Planner ✨</button>
+        <p id="emailStatus" style="text-align:center;font-size:13px;color:#888;margin:12px 0 0;min-height:18px;"></p>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    setTimeout(() => document.getElementById('emailInput')?.focus(), 300);
+  }
+
+  async function sendPlannerByEmail() {
+    const emailEl  = document.getElementById('emailInput');
+    const statusEl = document.getElementById('emailStatus');
+    const btn      = document.getElementById('emailSendBtn');
+    const email    = (emailEl?.value || '').trim();
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      statusEl.style.color = '#e05555';
+      statusEl.textContent = 'Por favor, insira um email valido.';
+      emailEl?.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    statusEl.style.color = '#888';
+    statusEl.textContent = 'Preparando seu planner...';
+
+    try {
+      // Codifica as respostas do quiz em base64 → link único personalizado
+      const encoded     = btoa(unescape(encodeURIComponent(JSON.stringify(answers))));
+      const plannerLink = 'https://glow-girl-up.vercel.app?r=' + encoded;
+
+      await emailjs.send(
+        EJS_SERVICE,
+        EJS_TEMPLATE,
+        { to_email: email, user_name: email.split('@')[0], planner_link: plannerLink },
+        EJS_KEY
+      );
+
+      btn.textContent = '✓ Enviado!';
+      btn.style.background = 'linear-gradient(135deg,#7ec87e,#4caf50)';
+      statusEl.style.color = '#4caf50';
+      statusEl.textContent = 'Verifique sua caixa de entrada (e o spam)! 💜';
+
+      setTimeout(() => document.getElementById('emailModal')?.remove(), 4000);
+
+    } catch (err) {
+      console.error('Email error:', err);
+      btn.disabled = false;
+      btn.textContent = 'Tentar novamente';
+      btn.style.background = 'linear-gradient(135deg,#e8b4d0,#c9a0dc)';
+      statusEl.style.color = '#e05555';
+      statusEl.textContent = 'Erro ao enviar. Verifique sua conexao e tente de novo.';
+    }
+  }
+
   // ── Modal de resultado ────────────────────────────────────────
   function showDownloadModal(contentHtml) {
     const old = document.getElementById('dlModal');
@@ -1911,6 +2017,11 @@
       const pw = 210, ph = 297, ml = 14, mr = 14, cw = 182;
       let y = 0;
 
+      // Remove emojis e chars fora do Latin — jsPDF não suporta Unicode além do básico
+      function ct(s) {
+        return (s || '').replace(/[\u{1F000}-\u{1FFFF}]|[\u{2600}-\u{27BF}]|[\u{2B00}-\u{2BFF}]|[\u{FE00}-\u{FEFF}]|️/gu, '').replace(/\s+/g, ' ').trim();
+      }
+
       const PURPLE  = [108, 71, 255];
       const DARK    = [26, 22, 38];
       const WHITE   = [255, 255, 255];
@@ -1955,11 +2066,11 @@
         doc.setFillColor(...LIGHT);
         doc.roundedRect(ml, y, 20, 6, 1.5, 1.5, 'F');
         doc.setFontSize(7.5); doc.setFont(undefined, 'bold'); doc.setTextColor(...PURPLE);
-        doc.text(r.time, ml + 10, y + 4.2, { align: 'center' });
+        doc.text(ct(r.time), ml + 10, y + 4.2, { align: 'center' });
         doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(...DARK);
-        doc.text(r.label, ml + 24, y + 3.5);
+        doc.text(ct(r.label), ml + 24, y + 3.5);
         doc.setFontSize(8); doc.setFont(undefined, 'normal'); doc.setTextColor(...GREY);
-        doc.text(r.desc, ml + 24, y + 8.5, { maxWidth: cw - 26 });
+        doc.text(ct(r.desc), ml + 24, y + 8.5, { maxWidth: cw - 26 });
         y += 13;
       });
       y += 3;
@@ -1971,7 +2082,7 @@
         doc.setDrawColor(210, 205, 235); doc.setLineWidth(0.3);
         doc.roundedRect(ml, y, 4.5, 4.5, 1, 1, 'S');
         doc.setFontSize(8.5); doc.setFont(undefined, 'normal'); doc.setTextColor(...DARK);
-        const lines = doc.splitTextToSize(c, cw - 9);
+        const lines = doc.splitTextToSize(ct(c), cw - 9);
         doc.text(lines, ml + 7, y + 3.5);
         y += 8 + (lines.length - 1) * 4;
       });
@@ -1982,9 +2093,9 @@
       habits.forEach(h => {
         checkY(12);
         doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(...DARK);
-        doc.text(h.name, ml + 4, y + 4);
+        doc.text(ct(h.name), ml + 4, y + 4);
         doc.setFontSize(8); doc.setFont(undefined, 'normal'); doc.setTextColor(...GREY);
-        doc.text(h.freq, ml + 4, y + 9);
+        doc.text(ct(h.freq), ml + 4, y + 9);
         y += 12;
       });
       y += 3;
@@ -1994,9 +2105,9 @@
       finance.forEach(f => {
         checkY(13);
         doc.setFontSize(9); doc.setFont(undefined, 'bold'); doc.setTextColor(...DARK);
-        doc.text(f.label, ml + 4, y + 4);
+        doc.text(ct(f.label), ml + 4, y + 4);
         doc.setFontSize(8); doc.setFont(undefined, 'normal'); doc.setTextColor(...GREY);
-        const dlines = doc.splitTextToSize(f.desc, cw - 8);
+        const dlines = doc.splitTextToSize(ct(f.desc), cw - 8);
         doc.text(dlines, ml + 4, y + 9);
         y += 9 + dlines.length * 4;
       });
@@ -2011,7 +2122,7 @@
         doc.setFontSize(7.5); doc.setFont(undefined, 'bold'); doc.setTextColor(...WHITE);
         doc.text(String(i + 1), ml + 2.75, y + 4.2, { align: 'center' });
         doc.setFontSize(9); doc.setFont(undefined, 'normal'); doc.setTextColor(...DARK);
-        const glines = doc.splitTextToSize(g, cw - 10);
+        const glines = doc.splitTextToSize(ct(g), cw - 10);
         doc.text(glines, ml + 9, y + 4.2);
         y += 10 + (glines.length - 1) * 4;
       });
